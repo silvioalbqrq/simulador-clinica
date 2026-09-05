@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Tributário 2027 - Clínica Médica</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #f8fafc; }
+        .input-yellow { background-color: #fef08a; font-weight: 600; color: #1e3a8a; }
+        .input-yellow:focus { background-color: #fef08a; ring: 2px; border-color: #2563eb; }
+        .tab-btn.active { border-bottom: 3px solid #2563eb; color: #2563eb; font-weight: 700; }
+    </style>
+</head>
+<body class="text-slate-800 pb-12">
+
+    <!-- Header Banner -->
+    <header class="bg-slate-900 text-white py-8 px-4 sm:px-8 border-b-4 border-blue-600 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <span class="bg-blue-600 text-xs font-bold tracking-wider uppercase px-3 py-1 rounded-full text-white mb-2 inline-block">
+                    Reforma Tributária EC 132/2023 • Projeção Anual 2027
+                </span>
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Simulador Tributário Anual 2027: Clínica Médica</h1>
+                <p class="text-slate-400 text-sm mt-1">Comparativo de 12 Meses & Memória de Cálculo Detalhada dos Tributos</p>
+            </div>
+            <div class="text-left md:text-right bg-slate-800 p-4 rounded-xl border border-slate-700">
+                <div class="text-xs text-slate-400">Receita Bruta Anual Acumulada</div>
+                <div id="header-total-revenue" class="text-2xl font-black text-emerald-400">R$ 0,00</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-8 mt-8 space-y-8">
+
+        <!-- Executive Cards Summary -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Lucro Presumido Card -->
+            <div id="card-lp" class="bg-white rounded-2xl p-6 shadow-sm border-2 border-emerald-500 relative overflow-hidden transition-all hover:shadow-md">
+                <div class="absolute top-0 right-0 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                    MAIS ECONÔMICO
+                </div>
+                <div class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Lucro Presumido (Equiparação)</div>
+                <div id="lp-total-tax" class="text-3xl font-black text-slate-900">R$ 0,00</div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 text-sm">
+                    <span class="text-slate-500">Carga Efetiva Anual:</span>
+                    <span id="lp-eff-rate" class="font-bold text-emerald-600 text-base">0,00%</span>
+                </div>
+                <div class="text-xs text-slate-500 mt-2">
+                    <i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> IRPJ/CSLL Reduzidos + ISS 5% + CBS/IBS Líquida
+                </div>
+            </div>
+
+            <!-- Simples Hibrido Card -->
+            <div id="card-sh" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 transition-all hover:shadow-md">
+                <div class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Simples Nacional Híbrido</div>
+                <div id="sh-total-tax" class="text-3xl font-black text-slate-900">R$ 0,00</div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 text-sm">
+                    <span class="text-slate-500">Carga Efetiva Anual:</span>
+                    <span id="sh-eff-rate" class="font-bold text-slate-700 text-base">0,00%</span>
+                </div>
+                <div class="text-xs text-slate-500 mt-2">
+                    <i class="fa-solid fa-circle-info text-blue-500 mr-1"></i> ISS no DAS + CBS/IBS Externa (com Crédito)
+                </div>
+            </div>
+
+            <!-- Simples Puro Card -->
+            <div id="card-sp" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 transition-all hover:shadow-md">
+                <div class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Simples Nacional Puro (Anexo V)</div>
+                <div id="sp-total-tax" class="text-3xl font-black text-slate-900">R$ 0,00</div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 text-sm">
+                    <span class="text-slate-500">Carga Efetiva Anual:</span>
+                    <span id="sp-eff-rate" class="font-bold text-slate-700 text-base">0,00%</span>
+                </div>
+                <div class="text-xs text-slate-500 mt-2">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-500 mr-1"></i> Alíquota Unificada Anexo V (Sem Folha)
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="border-b border-slate-200 flex gap-4 text-sm font-medium">
+            <button onclick="switchTab('tab-sim')" id="btn-tab-sim" class="tab-btn pb-3 px-2 active text-blue-600 flex items-center gap-2">
+                <i class="fa-solid fa-calculator"></i> Painel de Simulação (12 Meses)
+            </button>
+            <button onclick="switchTab('tab-lp-det')" id="btn-tab-lp-det" class="tab-btn pb-3 px-2 text-slate-500 flex items-center gap-2">
+                <i class="fa-solid fa-list-check"></i> Memória de Cálculo: Lucro Presumido
+            </button>
+            <button onclick="switchTab('tab-sh-det')" id="btn-tab-sh-det" class="tab-btn pb-3 px-2 text-slate-500 flex items-center gap-2">
+                <i class="fa-solid fa-list-check"></i> Memória de Cálculo: Simples Híbrido
+            </button>
+            <button onclick="switchTab('tab-sp-det')" id="btn-tab-sp-det" class="tab-btn pb-3 px-2 text-slate-500 flex items-center gap-2">
+                <i class="fa-solid fa-list-check"></i> Memória de Cálculo: Simples Puro
+            </button>
+        </div>
+
+        <!-- TAB 1: PAINEL DE SIMULAÇÃO -->
+        <div id="tab-sim" class="space-y-8">
+            <!-- Chart Section -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-column text-blue-600"></i>
+                    Evolução Mensal do Imposto por Regime Tributário (Janeiro a Dezembro de 2027)
+                </h2>
+                <div class="h-80">
+                    <canvas id="monthlyTaxChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Interactive Data Table (12 Months) -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-6 bg-slate-50 border-b border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-pen-to-square text-blue-600"></i>
+                            Entrada de Dados (Altere os campos amarelos)
+                        </h2>
+                        <p class="text-xs text-slate-500">Recálculo automático e instantâneo das tabelas e do gráfico ao alterar qualquer valor.</p>
+                    </div>
+                    <button onclick="resetDefaults()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-left"></i> Restaurar Padrões
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="text-xs uppercase bg-slate-900 text-white font-bold">
+                            <tr>
+                                <th class="px-4 py-3">Mês</th>
+                                <th class="px-4 py-3 bg-slate-800">Rec. Consultas (R$)</th>
+                                <th class="px-4 py-3 bg-slate-800">Rec. Exames/Proc. (R$)</th>
+                                <th class="px-4 py-3">Faturamento Total</th>
+                                <th class="px-4 py-3 bg-slate-800">Compras (R$)</th>
+                                <th class="px-4 py-3 bg-slate-800">Despesas (R$)</th>
+                                <th class="px-4 py-3">Lucro Presumido (R$)</th>
+                                <th class="px-4 py-3">Simples Híbrido (R$)</th>
+                                <th class="px-4 py-3">Simples Puro (R$)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="simulation-tbody" class="divide-y divide-slate-200"></tbody>
+                        <tfoot class="bg-slate-100 font-bold text-slate-900 border-t-2 border-slate-300">
+                            <tr id="simulation-tfoot"></tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: DETALHAMENTO LUCRO PRESUMIDO -->
+        <div id="tab-lp-det" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-calculator text-emerald-600"></i>
+                    Memória de Cálculo Detalhada por Tributo: Lucro Presumido (2027)
+                </h2>
+                <p class="text-xs text-slate-500 mb-6">Demonstrativo exato de como é calculado cada imposto no Lucro Presumido com equiparação hospitalar e créditos de CBS/IBS.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left">
+                        <thead class="bg-slate-900 text-white font-bold uppercase">
+                            <tr>
+                                <th class="px-3 py-2">Mês</th>
+                                <th class="px-3 py-2">IRPJ (1,20% Proc / 4,80% Cons)</th>
+                                <th class="px-3 py-2">CSLL (1,08% Proc / 2,88% Cons)</th>
+                                <th class="px-3 py-2">ISS Municipal (5,00%)</th>
+                                <th class="px-3 py-2">CBS/IBS Débito Bruto (3,92%)</th>
+                                <th class="px-3 py-2 text-rose-600">(-) Crédito CBS/IBS (3,92% s/ R$ 2k)</th>
+                                <th class="px-3 py-2">CBS/IBS Líquida</th>
+                                <th class="px-3 py-2 bg-emerald-800 text-white font-black">Total Imposto LP</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lp-det-tbody" class="divide-y divide-slate-200"></tbody>
+                        <tfoot id="lp-det-tfoot" class="bg-slate-100 font-bold border-t-2 border-slate-300"></tfoot>
+                    </table>
+                </div>
+
+                <!-- Formula Formulas Box -->
+                <div class="mt-6 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-2">
+                    <div class="font-bold text-slate-900">Fórmulas Utilizadas para Cada Imposto:</div>
+                    <div>• <strong>IRPJ:</strong> (Consultas × 32% + Exames × 8%) × 15% = 4,80% s/ Consultas e 1,20% s/ Exames</div>
+                    <div>• <strong>CSLL:</strong> (Consultas × 32% + Exames × 12%) × 9% = 2,88% s/ Consultas e 1,08% s/ Exames</div>
+                    <div>• <strong>ISS:</strong> Faturamento Total × 5,00%</div>
+                    <div>• <strong>CBS/IBS Líquida:</strong> (Faturamento Total × 3,92%) - ((Compras + Despesas) × 3,92%)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: DETALHAMENTO SIMPLES HÍBRIDO -->
+        <div id="tab-sh-det" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-calculator text-blue-600"></i>
+                    Memória de Cálculo Detalhada por Tributo: Simples Nacional Híbrido (2027)
+                </h2>
+                <p class="text-xs text-slate-500 mb-6">Detalhamento dos tributos mantidos dentro do DAS (IRPJ, CSLL, CPP e ISS) e da CBS/IBS recolhida por fora com crédito.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left">
+                        <thead class="bg-slate-900 text-white font-bold uppercase">
+                            <tr>
+                                <th class="px-3 py-2">Mês</th>
+                                <th class="px-3 py-2">IRPJ (no DAS: 3,875%)</th>
+                                <th class="px-3 py-2">CSLL (no DAS: 2,325%)</th>
+                                <th class="px-3 py-2">CPP Patronal (no DAS: 4,472%)</th>
+                                <th class="px-3 py-2">ISS (no DAS: 2,170%)</th>
+                                <th class="px-3 py-2 bg-slate-800">Total DAS Interno (12,84%)</th>
+                                <th class="px-3 py-2">CBS/IBS Líquida (Externa)</th>
+                                <th class="px-3 py-2 bg-blue-800 text-white font-black">Total Imposto Híbrido</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sh-det-tbody" class="divide-y divide-slate-200"></tbody>
+                        <tfoot id="sh-det-tfoot" class="bg-slate-100 font-bold border-t-2 border-slate-300"></tfoot>
+                    </table>
+                </div>
+
+                <div class="mt-6 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-2">
+                    <div class="font-bold text-slate-900">Regra de Partição Interna do DAS no Simples Híbrido:</div>
+                    <div>• <strong>Desconto de PIS/COFINS no DAS:</strong> 3,05% (PIS) + 14,10% (COFINS) = 17,15% de redução na alíquota do DAS.</div>
+                    <div>• <strong>DAS Reduzido Mantido:</strong> 15,50% × (1 - 17,15%) = <strong>12,84175%</strong> (composto por IRPJ, CSLL, CPP e ISS).</div>
+                    <div>• <strong>CBS/IBS Externa Não Cumulativa:</strong> 3,92% sobre Faturamento Total - 3,92% de crédito sobre Compras/Despesas.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: DETALHAMENTO SIMPLES PURO -->
+        <div id="tab-sp-det" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-calculator text-amber-600"></i>
+                    Memória de Cálculo Detalhada por Tributo: Simples Nacional Puro (Anexo V - Faixa 1)
+                </h2>
+                <p class="text-xs text-slate-500 mb-6">Repartição interna de cada tributo embutido na alíquota única de 15,50% do DAS.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left">
+                        <thead class="bg-slate-900 text-white font-bold uppercase">
+                            <tr>
+                                <th class="px-3 py-2">Mês</th>
+                                <th class="px-3 py-2">IRPJ (3,875%)</th>
+                                <th class="px-3 py-2">CSLL (2,325%)</th>
+                                <th class="px-3 py-2">PIS (0,473%)</th>
+                                <th class="px-3 py-2">COFINS (2,186%)</th>
+                                <th class="px-3 py-2">CPP Patronal (4,472%)</th>
+                                <th class="px-3 py-2">ISS (2,170%)</th>
+                                <th class="px-3 py-2 bg-amber-800 text-white font-black">Total DAS Unificado (15,50%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sp-det-tbody" class="divide-y divide-slate-200"></tbody>
+                        <tfoot id="sp-det-tfoot" class="bg-slate-100 font-bold border-t-2 border-slate-300"></tfoot>
+                    </table>
+                </div>
+
+                <div class="mt-6 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-2">
+                    <div class="font-bold text-slate-900">Tabela de Partição Oficial do Anexo V (Faixa 1):</div>
+                    <div>• <strong>IRPJ:</strong> 25,00% do DAS (= 3,8750% efetivo) | <strong>CSLL:</strong> 15,00% do DAS (= 2,3250% efetivo)</div>
+                    <div>• <strong>PIS/PASEP:</strong> 3,05% do DAS (= 0,4728% efetivo) | <strong>COFINS:</strong> 14,10% do DAS (= 2,1855% efetivo)</div>
+                    <div>• <strong>CPP Patronal:</strong> 28,85% do DAS (= 4,4718% efetivo) | <strong>ISS:</strong> 14,00% do DAS (= 2,1700% efetivo)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Parameters Explanation -->
+        <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-2xl">
+            <h3 class="font-bold text-blue-900 text-base mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-scale-balanced"></i> Premissas Regulatórias Aplicadas no Simulador
+            </h3>
+            <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-blue-900">
+                <li class="flex items-start gap-2">
+                    <i class="fa-solid fa-check text-blue-600 mt-0.5"></i>
+                    <span><strong>Reforma Tributária 2027:</strong> CBS (9,7%) + IBS (0,1%) com <strong>60% de redução</strong> para serviços de saúde = <strong>3,92% efetivo</strong>.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fa-solid fa-check text-blue-600 mt-0.5"></i>
+                    <span><strong>Crédito de Insumos:</strong> Abatimento de 3,92% sobre Compras e Despesas elegíveis para CBS/IBS no Lucro Presumido e Simples Híbrido.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fa-solid fa-check text-blue-600 mt-0.5"></i>
+                    <span><strong>Equiparação Hospitalar (LP):</strong> IRPJ (15% s/ 8% = 1,20%) e CSLL (9% s/ 12% = 1,08%) para Exames/Procedimentos. Consultas usam 32% (IRPJ 4,80% / CSLL 2,88%).</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fa-solid fa-check text-blue-600 mt-0.5"></i>
+                    <span><strong>Simples Híbrido (2027):</strong> ISS mantido dentro do DAS (14% da tabela). Segregação de PIS/COFINS (17,15% de desconto no DAS). DAS interno = 12,84%.</span>
+                </li>
+            </ul>
+        </div>
+
+    </main>
+
+    <footer class="text-center text-xs text-slate-400 mt-12">
+        Simulador Tributário 2027 • Desenvolvido para Diagnóstico Fiscal da Clínica Médica
+    </footer>
+
+    <script>
+        const initialData = [
+            { m: "Janeiro", cons: 0, exam: 42500, pur: 500, exp: 1500 },
+            { m: "Fevereiro", cons: 0, exam: 38560, pur: 500, exp: 1500 },
+            { m: "Março", cons: 0, exam: 59560, pur: 500, exp: 1500 },
+            { m: "Abril", cons: 0, exam: 45000, pur: 500, exp: 1500 },
+            { m: "Maio", cons: 0, exam: 48000, pur: 500, exp: 1500 },
+            { m: "Junho", cons: 0, exam: 52000, pur: 500, exp: 1500 },
+            { m: "Julho", cons: 0, exam: 50000, pur: 500, exp: 1500 },
+            { m: "Agosto", cons: 0, exam: 53000, pur: 500, exp: 1500 },
+            { m: "Setembro", cons: 0, exam: 51000, pur: 500, exp: 1500 },
+            { m: "Outubro", cons: 0, exam: 55000, pur: 500, exp: 1500 },
+            { m: "Novembro", cons: 0, exam: 58000, pur: 500, exp: 1500 },
+            { m: "Dezembro", cons: 0, exam: 62000, pur: 500, exp: 1500 }
+        ];
+
+        let monthsData = JSON.parse(JSON.stringify(initialData));
+        let monthlyChart = null;
+
+        function fmtCurr(val) {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+        }
+
+        function fmtPct(val) {
+            return (val * 100).toFixed(2) + '%';
+        }
+
+        function switchTab(tabId) {
+            ['tab-sim', 'tab-lp-det', 'tab-sh-det', 'tab-sp-det'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            ['btn-tab-sim', 'btn-tab-lp-det', 'btn-tab-sh-det', 'btn-tab-sp-det'].forEach(id => {
+                document.getElementById(id).classList.remove('active', 'text-blue-600');
+                document.getElementById(id).classList.add('text-slate-500');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const btnId = 'btn-' + tabId;
+            document.getElementById(btnId).classList.add('active', 'text-blue-600');
+            document.getElementById(btnId).classList.remove('text-slate-500');
+        }
+
+        function calculateDetailedRegimes(row) {
+            const totRev = row.cons + row.exam;
+            const baseInsumos = row.pur + row.exp;
+            const credCbsIbs = baseInsumos * 0.0392;
+
+            // 1. Lucro Presumido Breakdown
+            const lpIrpj = (row.cons * 0.32 + row.exam * 0.08) * 0.15;
+            const lpCsll = (row.cons * 0.32 + row.exam * 0.12) * 0.09;
+            const lpIss = totRev * 0.05;
+            const lpCbsDebito = totRev * 0.0392;
+            const lpCbsLiquida = Math.max(0, lpCbsDebito - credCbsIbs);
+            const lpTotal = lpIrpj + lpCsll + lpIss + lpCbsLiquida;
+
+            // 2. Simples Híbrido Breakdown
+            const shIrpj = totRev * 0.155 * 0.25;
+            const shCsll = totRev * 0.155 * 0.15;
+            const shCpp = totRev * 0.155 * 0.2885;
+            const shIss = totRev * 0.155 * 0.14;
+            const shDasInterno = shIrpj + shCsll + shCpp + shIss;
+            const shTotal = shDasInterno + lpCbsLiquida;
+
+            // 3. Simples Puro Breakdown
+            const spIrpj = totRev * 0.155 * 0.25;
+            const spCsll = totRev * 0.155 * 0.15;
+            const spPis = totRev * 0.155 * 0.0305;
+            const spCofins = totRev * 0.155 * 0.1410;
+            const spCpp = totRev * 0.155 * 0.2885;
+            const spIss = totRev * 0.155 * 0.1400;
+            const spTotal = totRev * 0.155;
+
+            return {
+                totRev, baseInsumos, credCbsIbs,
+                lpIrpj, lpCsll, lpIss, lpCbsDebito, lpCbsLiquida, lpTotal,
+                shIrpj, shCsll, shCpp, shIss, shDasInterno, shTotal,
+                spIrpj, spCsll, spPis, spCofins, spCpp, spIss, spTotal
+            };
+        }
+
+        function renderTableAndDashboard() {
+            const tbody = document.getElementById('simulation-tbody');
+            tbody.innerHTML = '';
+
+            const lpTbody = document.getElementById('lp-det-tbody');
+            const shTbody = document.getElementById('sh-det-tbody');
+            const spTbody = document.getElementById('sp-det-tbody');
+            
+            lpTbody.innerHTML = '';
+            shTbody.innerHTML = '';
+            spTbody.innerHTML = '';
+
+            let sumRev = 0, sumCons = 0, sumExam = 0, sumPur = 0, sumExp = 0;
+            let sumLp = 0, sumSh = 0, sumSp = 0;
+
+            let sumLpIrpj = 0, sumLpCsll = 0, sumLpIss = 0, sumLpCbsDeb = 0, sumLpCred = 0, sumLpCbsLiq = 0;
+            let sumShIrpj = 0, sumShCsll = 0, sumShCpp = 0, sumShIss = 0, sumShDas = 0;
+            let sumSpIrpj = 0, sumSpCsll = 0, sumSpPis = 0, sumSpCof = 0, sumSpCpp = 0, sumSpIss = 0;
+
+            let lpMonthlyArr = [], shMonthlyArr = [], spMonthlyArr = [];
+
+            monthsData.forEach((row, idx) => {
+                const d = calculateDetailedRegimes(row);
+
+                sumCons += row.cons;
+                sumExam += row.exam;
+                sumRev += d.totRev;
+                sumPur += row.pur;
+                sumExp += row.exp;
+                
+                sumLp += d.lpTotal;
+                sumSh += d.shTotal;
+                sumSp += d.spTotal;
+
+                sumLpIrpj += d.lpIrpj; sumLpCsll += d.lpCsll; sumLpIss += d.lpIss;
+                sumLpCbsDeb += d.lpCbsDebito; sumLpCred += d.credCbsIbs; sumLpCbsLiq += d.lpCbsLiquida;
+
+                sumShIrpj += d.shIrpj; sumShCsll += d.shCsll; sumShCpp += d.shCpp;
+                sumShIss += d.shIss; sumShDas += d.shDasInterno;
+
+                sumSpIrpj += d.spIrpj; sumSpCsll += d.spCsll; sumSpPis += d.spPis;
+                sumSpCof += d.spCofins; sumSpCpp += d.spCpp; sumSpIss += d.spIss;
+
+                lpMonthlyArr.push(d.lpTotal);
+                shMonthlyArr.push(d.shTotal);
+                spMonthlyArr.push(d.spTotal);
+
+                // Simulation Main Table
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors";
+                tr.innerHTML = `
+                    <td class="px-4 py-3 font-semibold text-slate-800">${row.m}</td>
+                    <td class="px-2 py-2"><input type="number" step="100" value="${row.cons}" onchange="updateVal(${idx}, 'cons', this.value)" class="w-full p-2 text-right rounded-lg input-yellow border border-amber-300"></td>
+                    <td class="px-2 py-2"><input type="number" step="100" value="${row.exam}" onchange="updateVal(${idx}, 'exam', this.value)" class="w-full p-2 text-right rounded-lg input-yellow border border-amber-300"></td>
+                    <td class="px-4 py-3 font-bold text-slate-900">${fmtCurr(d.totRev)}</td>
+                    <td class="px-2 py-2"><input type="number" step="100" value="${row.pur}" onchange="updateVal(${idx}, 'pur', this.value)" class="w-full p-2 text-right rounded-lg input-yellow border border-amber-300"></td>
+                    <td class="px-2 py-2"><input type="number" step="100" value="${row.exp}" onchange="updateVal(${idx}, 'exp', this.value)" class="w-full p-2 text-right rounded-lg input-yellow border border-amber-300"></td>
+                    <td class="px-4 py-3 font-bold text-emerald-600 bg-emerald-50/50">${fmtCurr(d.lpTotal)}</td>
+                    <td class="px-4 py-3 font-medium text-slate-700">${fmtCurr(d.shTotal)}</td>
+                    <td class="px-4 py-3 font-medium text-slate-700">${fmtCurr(d.spTotal)}</td>
+                `;
+                tbody.appendChild(tr);
+
+                // LP Detailed Table
+                const trLp = document.createElement('tr');
+                trLp.innerHTML = `
+                    <td class="px-3 py-2 font-semibold">${row.m}</td>
+                    <td class="px-3 py-2">${fmtCurr(d.lpIrpj)}</td>
+                    <td class="px-3 py-2">${fmtCurr(d.lpCsll)}</td>
+                    <td class="px-3 py-2">${fmtCurr(d.lpIss)}</td>
+                    <td class="px-3 py-2">${fmtCurr(d.lpCbsDebito)}</td>
+                    <td class="px-3 py-2 text-rose-600 font-medium">-${fmtCurr(d.credCbsIbs)}</td>
+                    <td class="px-3 py-2 font-semibold">${fmtCurr(d.lpCbsLiquida)}</td>
+                    <td class="px-3 py-2 font-bold text-emerald-700 bg-emerald-50">${fmtCurr(d.lpTotal)}</td>
+                `;
+                lpTbody.appendChild(trLp);
+
+                // SH Detailed Table
+                const trSh = document.createElement('tr');
+                trSh.innerHTML = `
+                    <td class="px-3 py-2 font-semibold">${row.m}</td>
+                    <td class="px-3 py-2">${fmtCurr(d.shIrpj)}</td>
+                    <td class="px-3 py-2">${fmtCurr(d.shCsll)}</td>
+                    <td class="px-3 py-2">${fmtCurr(d.shCpp)}</td>
+                    <td class="px-3 py-2">${fmtCurr(d.shIss)}</td>
+                    <td class="px-3 py-2 font-bold bg-slate-100">${fmtCurr(d.shDasInterno)}</td>
+                    <td class="px-3 py-2 font-semibold">${fmtCurr(d.lpCbsLiquida)}</td>
+                    <td class="px-3 py-2 font-bold text-blue-700 bg-blue-50">${fmtCurr(d.shTotal)}</td>
+                `;
+                shTbody.appendChild(trSh);
+
+                // SP Detailed Table
+                const trSp = document.createElement('tr');
+                trSp.innerHTML = `
+                    <td class="px-3 py-2 font-semibold">${row.m}</td>
+                    <td class="px-3 py-2">${fmtCurr(d.spIrpj)}</td>
+                    <td class="px-3 py-2">${fmtCurr(d.spCsll)}</td>
+                    <td class="px-3 py-2">${fmtCurr(d.spPis)}</td>
+                    <td class="px-3 py-2">${fmtCurr(d.spCofins)}</td>
+                    <td class="px-3 py-2">${fmtCurr(d.spCpp)}</td>
+                    <td class="px-3 py-2">${fmtCurr(d.spIss)}</td>
+                    <td class="px-3 py-2 font-bold text-amber-700 bg-amber-50">${fmtCurr(d.spTotal)}</td>
+                `;
+                spTbody.appendChild(trSp);
+            });
+
+            // Foot Totals for Simulation Main Table
+            document.getElementById('simulation-tfoot').innerHTML = `
+                <td class="px-4 py-4 uppercase">Total Anual</td>
+                <td class="px-4 py-4 text-right">${fmtCurr(sumCons)}</td>
+                <td class="px-4 py-4 text-right">${fmtCurr(sumExam)}</td>
+                <td class="px-4 py-4 text-slate-900 text-base">${fmtCurr(sumRev)}</td>
+                <td class="px-4 py-4 text-right">${fmtCurr(sumPur)}</td>
+                <td class="px-4 py-4 text-right">${fmtCurr(sumExp)}</td>
+                <td class="px-4 py-4 text-emerald-700 text-base font-black">${fmtCurr(sumLp)}</td>
+                <td class="px-4 py-4 text-slate-800 text-base">${fmtCurr(sumSh)}</td>
+                <td class="px-4 py-4 text-slate-800 text-base">${fmtCurr(sumSp)}</td>
+            `;
+
+            // Foot Totals for LP
+            document.getElementById('lp-det-tfoot').innerHTML = `
+                <tr class="bg-slate-100">
+                    <td class="px-3 py-3 uppercase">TOTAL ANUAL</td>
+                    <td class="px-3 py-3">${fmtCurr(sumLpIrpj)}</td>
+                    <td class="px-3 py-3">${fmtCurr(sumLpCsll)}</td>
+                    <td class="px-3 py-3">${fmtCurr(sumLpIss)}</td>
+                    <td class="px-3 py-3">${fmtCurr(sumLpCbsDeb)}</td>
+                    <td class="px-3 py-3 text-rose-600">-${fmtCurr(sumLpCred)}</td>
+                    <td class="px-3 py-3">${fmtCurr(sumLpCbsLiq)}</td>
+                    <td class="px-3 py-3 text-emerald-700 text-sm font-black">${fmtCurr(sumLp)}</td>
+                </tr>
+            `;
+
+            // Foot Totals for SH
+            document.getElementById('sh-det-tfoot').innerHTML = `
+                <tr class="bg-slate-100">
+                    <td class="px-3 py-3 uppercase">TOTAL ANUAL</td>
+                    <td class="px-3 py-3">${fmtCurr(sumShIrpj)}</td>
+                    <td class="px-3 py-3">${fmtCurr(sumShCsll)}</td>
+                    <td class="px-3 py-3">${fmtCurr(sumShCpp)}</td>
+                    <td class="px-3 py-3">${fmtCurr(sumShIss)}</td>
+                    <td class="px-3 py-3 font-bold">${fmtCurr(sumShDas)}</td>
+                    <td class="px-3 py-3">${fmtCurr(sumLpCbsLiq)}</td>
+                    <td class="px-3 py-3 text-blue-700 text-sm font-black">${fmtCurr(sumSh)}</td>
+                </tr>
+            `;
+
+            // Foot Totals for SP
+            document.getElementById('sp-det-tfoot').innerHTML = `
+                <tr class="bg-slate-100">
+                    <td class="px-3 py-3 uppercase">TOTAL ANUAL</td>
+                    <td class="px-3 py-3">${fmtCurr(sumSpIrpj)}</td>
+                    <td class="px-3 py-3">${fmtCurr(sumSpCsll)}</td>
+                    <td class="px-3 py-3">${fmtCurr(sumSpPis)}</td>
+                    <td class="px-3 py-3">${fmtCurr(sumSpCof)}</td>
+                    <td class="px-3 py-3">${fmtCurr(sumSpCpp)}</td>
+                    <td class="px-3 py-3">${fmtCurr(sumSpIss)}</td>
+                    <td class="px-3 py-3 text-amber-700 text-sm font-black">${fmtCurr(sumSp)}</td>
+                </tr>
+            `;
+
+            // Update Cards
+            document.getElementById('header-total-revenue').innerText = fmtCurr(sumRev);
+            
+            document.getElementById('lp-total-tax').innerText = fmtCurr(sumLp);
+            document.getElementById('lp-eff-rate').innerText = fmtPct(sumRev ? sumLp / sumRev : 0);
+
+            document.getElementById('sh-total-tax').innerText = fmtCurr(sumSh);
+            document.getElementById('sh-eff-rate').innerText = fmtPct(sumRev ? sumSh / sumRev : 0);
+
+            document.getElementById('sp-total-tax').innerText = fmtCurr(sumSp);
+            document.getElementById('sp-eff-rate').innerText = fmtPct(sumRev ? sumSp / sumRev : 0);
+
+            updateChart(lpMonthlyArr, shMonthlyArr, spMonthlyArr);
+        }
+
+        function updateVal(index, field, value) {
+            monthsData[index][field] = parseFloat(value) || 0;
+            renderTableAndDashboard();
+        }
+
+        function resetDefaults() {
+            monthsData = JSON.parse(JSON.stringify(initialData));
+            renderTableAndDashboard();
+        }
+
+        function updateChart(lpData, shData, spData) {
+            const ctx = document.getElementById('monthlyTaxChart').getContext('2d');
+            const labels = monthsData.map(d => d.m);
+
+            if (monthlyChart) {
+                monthlyChart.destroy();
+            }
+
+            monthlyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Lucro Presumido',
+                            data: lpData,
+                            backgroundColor: '#10b981'
+                        },
+                        {
+                            label: 'Simples Híbrido',
+                            data: shData,
+                            backgroundColor: '#3b82f6'
+                        },
+                        {
+                            label: 'Simples Puro',
+                            data: spData,
+                            backgroundColor: '#f59e0b'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value;
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': R$ ' + context.parsed.y.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        window.onload = function() {
+            renderTableAndDashboard();
+        };
+    </script>
+</body>
+</html>
