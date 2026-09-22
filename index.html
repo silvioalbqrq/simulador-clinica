@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulador Tributário 2027 v8.3 - Clínica Médica</title>
+<title>Simulador Tributário 2027 v8.4 - Clínica Médica</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -22,8 +22,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f8fafc}
 <header class="bg-slate-900 text-white py-8 px-4 sm:px-8 border-b-4 border-emerald-500">
 <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between gap-4">
 <div>
-<span class="bg-emerald-600 text-xs font-bold uppercase px-3 py-1 rounded-full mb-2 inline-block">v8.3 • EC 132/2023 + LC 123/2006 + LC 214/2025 • Transição 2027</span>
-<h1 class="text-2xl sm:text-3xl font-extrabold">Simulador Tributário 2027 v8.3: Clínica Médica</h1>
+<span class="bg-emerald-600 text-xs font-bold uppercase px-3 py-1 rounded-full mb-2 inline-block">v8.4 • EC 132/2023 + LC 123/2006 + LC 214/2025 • Transição 2027</span>
+<h1 class="text-2xl sm:text-3xl font-extrabold">Simulador Tributário 2027 v8.4: Clínica Médica</h1>
 <p class="text-slate-400 text-sm mt-1">Lucro Presumido (adicional IRPJ; PIS/COFINS extintos → CBS) vs Simples progressivo (Fator R mensal + RBT12) vs Híbrido</p>
 </div>
 <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-right">
@@ -79,6 +79,25 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f8fafc}
 </div>
 <div class="text-[10px] text-slate-500 mt-1">Em branco = usa RBT12÷12 (média). Preencha o valor real de cada mês do ano anterior para a RBT12 fev/dez… fechar igual ao extrato do Simples (PCGDAS). Ex.: jan ant. sai da janela em fev; fev ant. sai em mar.</div>
 </details>
+<details class="block col-span-1 md:col-span-2">
+<summary class="cursor-pointer text-slate-700 font-semibold select-none">Folha do ano anterior mês a mês <span class="font-normal text-slate-400">(opcional — para FPS12 / Fator R bater com a folha real)</span></summary>
+<div class="grid grid-cols-3 sm:grid-cols-4 gap-2 mt-2">
+<label class="block text-[10px]">Jan ant.<input id="p-f0" type="number" min="0" step="1" placeholder="média" class="w-full p-1.5 rounded input-blue border border-blue-300"></label>
+<label class="block text-[10px]">Fev ant.<input id="p-f1" type="number" min="0" step="1" placeholder="média" class="w-full p-1.5 rounded input-blue border border-blue-300"></label>
+<label class="block text-[10px]">Mar ant.<input id="p-f2" type="number" min="0" step="1" placeholder="média" class="w-full p-1.5 rounded input-blue border border-blue-300"></label>
+<label class="block text-[10px]">Abr ant.<input id="p-f3" type="number" min="0" step="1" placeholder="média" class="w-full p-1.5 rounded input-blue border border-blue-300"></label>
+<label class="block text-[10px]">Mai ant.<input id="p-f4" type="number" min="0" step="1" placeholder="média" class="w-full p-1.5 rounded input-blue border border-blue-300"></label>
+<label class="block text-[10px]">Jun ant.<input id="p-f5" type="number" min="0" step="1" placeholder="média" class="w-full p-1.5 rounded input-blue border border-blue-300"></label>
+<label class="block text-[10px]">Jul ant.<input id="p-f6" type="number" min="0" step="1" placeholder="média" class="w-full p-1.5 rounded input-blue border border-blue-300"></label>
+<label class="block text-[10px]">Ago ant.<input id="p-f7" type="number" min="0" step="1" placeholder="média" class="w-full p-1.5 rounded input-blue border border-blue-300"></label>
+<label class="block text-[10px]">Set ant.<input id="p-f8" type="number" min="0" step="1" placeholder="média" class="w-full p-1.5 rounded input-blue border border-blue-300"></label>
+<label class="block text-[10px]">Out ant.<input id="p-f9" type="number" min="0" step="1" placeholder="média" class="w-full p-1.5 rounded input-blue border border-blue-300"></label>
+<label class="block text-[10px]">Nov ant.<input id="p-f10" type="number" min="0" step="1" placeholder="média" class="w-full p-1.5 rounded input-blue border border-blue-300"></label>
+<label class="block text-[10px]">Dez ant.<input id="p-f11" type="number" min="0" step="1" placeholder="média" class="w-full p-1.5 rounded input-blue border border-blue-300"></label>
+</div>
+<div class="text-[10px] text-slate-500 mt-1">Em branco = usa FPS12÷12 (média). Se a folha do ano anterior foi irregular, preencha para o Fator R mensal ficar exato. Jan usa FPS12 cheio; fev sai Jan ant. e entra Jan/27, e assim por diante.</div>
+</details>
+<label class="block flex items-center gap-2 pt-5"><input id="p-nova" type="checkbox" class="w-4 h-4"> Empresa nova em 2027 (RBT12/FPS12 proporcional)</label>
 <label class="block flex items-center gap-2 pt-5"><input id="p-semfolha" type="checkbox" class="w-4 h-4"> Sem folha</label>
 <label class="block">ISS municipal %
 <input id="p-iss" type="number" value="5" min="2" max="5" step="0.5" class="w-full p-2 rounded-lg input-blue border border-blue-300">
@@ -106,9 +125,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f8fafc}
 <label class="block flex items-center gap-2 pt-5"><input id="p-equip" type="checkbox" checked class="w-4 h-4"> Equiparação hosp.</label>
 <label class="block flex items-center gap-2 pt-5"><input id="p-inss" type="checkbox" checked class="w-4 h-4"> Mostrar INSS s/ folha no LP</label>
 </div>
-<div class="mt-2 text-[11px] text-slate-600"><b>RBT12 = extrato PCGDAS:</b> janeiro usa o <b>RBT12 inicial cheio</b> (12 meses anteriores a jan — sem a receita de janeiro). Em fevereiro sai o mês anterior real (campo “Jan ant.”) e entra a receita de janeiro; idem para os demais meses — se deixar o histórico em branco, sai a média RBT12÷12. <b>FPS12</b> = folha dos 12 meses anteriores ao mês; digite a folha mês a mês (entra na janela a partir do mês seguinte). <b>Fator R = FPS12 ÷ RBT12</b> ≥28% → III, &lt;28% → V. Com <b>Sem folha</b>, FPS12 = 0 → Anexo V. Folha mensal também alimenta o INSS do LP.</div>
+<div class="mt-2 text-[11px] text-slate-600"><b>RBT12 / FPS12 = 12 meses ANTERIORES ao mês (extrato PCGDAS, sem o mês corrente):</b> janeiro usa o <b>RBT12/FPS12 inicial cheio</b>. Em fevereiro sai o mês Jan ant. (receita <b>p-h0</b> / folha <b>p-f0</b>) e entra janeiro/27; idem para os demais meses — em branco usa a média (RBT12÷12, FPS12÷12). <b>Fator R = FPS12 ÷ RBT12</b> ≥28% → III, &lt;28% → V. Com <b>Sem folha</b>, FPS12 = 0 → Anexo V. Folha mensal entra na FPS12 do mês seguinte e no INSS do LP. Com <b>Empresa nova</b>, RBT12/FPS12 são proporcionalizados (soma acumulada ×12 ÷ meses) nos primeiros meses.</div>
 <div class="flex flex-wrap items-center gap-2 mt-3 text-[11px]">
 <button onclick="saveData()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-semibold"><i class="fa-solid fa-floppy-disk"></i> Salvar valores</button>
+<button onclick="exportCSV()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-semibold"><i class="fa-solid fa-file-csv"></i> Exportar CSV</button>
 <button onclick="resetDefaults()" class="bg-slate-200 hover:bg-slate-300 px-3 py-1.5 rounded-lg font-semibold"><i class="fa-solid fa-rotate-left"></i> Restaurar padrões</button>
 <button onclick="limparTudo()" class="bg-rose-100 hover:bg-rose-200 text-rose-800 px-3 py-1.5 rounded-lg font-semibold"><i class="fa-solid fa-eraser"></i> Limpar tudo</button>
 <span id="save-status" class="ml-1 text-slate-500"></span>
@@ -224,7 +244,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f8fafc}
 <div id="tab-sp-det" class="hidden bg-white p-6 rounded-2xl border overflow-x-auto">
 <h3 class="font-bold mb-1 text-amber-700">Memória Puro: DAS progressivo (sem CBS/IBS extra)</h3>
 <table class="w-full text-[11px] text-left"><thead class="bg-slate-900 text-white uppercase"><tr>
-<th class="px-2 py-2">Mês</th><th class="px-2 py-2" title="Folha salarial lançada no mês">Folha mês</th><th class="px-2 py-2" title="Soma da folha dos últimos 12 meses até o mês (janela rolante)">FPS12</th><th class="px-2 py-2" title="Receita bruta dos 12 meses até o mês (janela rolante)">RBT12</th><th class="px-2 py-2" title="Fator R = FPS12 ÷ RBT12">Fator R</th><th class="px-2 py-2">Faixa</th><th class="px-2 py-2">Aliq.ef</th><th class="px-2 py-2">DAS</th><th class="px-2 py-2">ISS dentro (teto 5%)</th><th class="px-2 py-2">Total Puro</th></tr></thead>
+<th class="px-2 py-2">Mês</th><th class="px-2 py-2" title="Folha salarial lançada no mês">Folha mês</th><th class="px-2 py-2" title="FPS12 = folha dos 12 meses ANTERIORES ao mês (sem o mês corrente)">FPS12 (12m ant.)</th><th class="px-2 py-2" title="RBT12 = receita dos 12 meses ANTERIORES ao mês (sem o mês corrente)">RBT12 (12m ant.)</th><th class="px-2 py-2" title="Fator R = FPS12 ÷ RBT12">Fator R</th><th class="px-2 py-2">Faixa</th><th class="px-2 py-2">Aliq.ef</th><th class="px-2 py-2">DAS</th><th class="px-2 py-2">ISS dentro (teto 5%)</th><th class="px-2 py-2">Total Puro</th></tr></thead>
 <tbody id="sp-det-tbody" class="divide-y"></tbody><tfoot id="sp-det-tfoot" class="bg-slate-100 font-bold"></tfoot></table>
 </div>
 
@@ -259,10 +279,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f8fafc}
 </details>
 
 <div class="bg-blue-50 border-l-4 border-blue-600 p-5 rounded-r-2xl text-xs text-blue-900">
-<b>Premissas v8.3 (EC 132/2023, LC 214/2025; LC 123/2006 redação LC 155/2016):</b>
+<b>Premissas v8.4 (EC 132/2023, LC 214/2025; LC 123/2006 redação LC 155/2016):</b>
 <ul class="list-disc ml-5 mt-1 space-y-1">
 <li><b>PIS/COFINS extintos a partir de 2027</b> (EC 132/2023, LC 214/2025) — substituídos pela CBS. Não são cobrados à parte no LP nem no Híbrido (sem bitributação com a CBS). Na partilha do Simples (Anexos III e V da LC 123/2006) os percentuais de PIS/COFINS continuam dentro do DAS, conforme a lei.</li>
-<li><b>RBT12/FPS12 = 12 meses anteriores ao mês (extrato PCGDAS):</b> janeiro usa o RBT12/FPS12 inicial cheio (sem a receita/folha de janeiro). Em fevereiro sai o mês anterior e entra janeiro, e assim por diante. O histórico do ano anterior é editável (padrão = média) para fev/mar… fecharem igual ao extrato. <b>Fator R = FPS12 ÷ RBT12</b> mensal; ≥28% → Anexo III (§5º-J), &lt;28% → Anexo V (§5º-M).</li>
+<li><b>RBT12/FPS12 = 12 meses ANTERIORES ao mês (extrato PCGDAS, sem o mês corrente):</b> janeiro usa o RBT12/FPS12 inicial cheio. Em fevereiro sai Jan ant. (p-h0 / p-f0) e entra janeiro/27, e assim por diante. Em branco usa a média. Divergência soma(hist) × RBT12/FPS12 gera alerta ⚠. <b>Empresa nova:</b> proporcionaliza (acumulado ×12 ÷ meses decorridos). <b>Fator R = FPS12 ÷ RBT12</b> mensal; ≥28% → Anexo III (§5º-J), &lt;28% → Anexo V (§5º-M).</li>
 <li>Opção <b>Sem folha</b>: zera folha 12m e folha mensal → Fator R 0% (Anexo V) e INSS zero no LP.</li>
 <li>Simples conforme partilha oficial acima. <b>Híbrido (LC 214/2025):</b> IBS/CBS fora do DAS pelo regime regular (débito − crédito; apuração separada CBS × IBS), DAS mantém IRPJ/CSLL/CPP/ISS; desconto no DAS = % PIS/COFINS da faixa (parcela dos tributos sobre consumo que a CBS cobre por fora). Puro: IBS/CBS dentro do DAS, sem crédito. Bônus do híbrido fora da conta: transfere créditos cheios ao cliente PJ e pode gerar ressarcimento.</li>
 <li>LP: IRPJ 15% + adicional 10% sobre base &gt; R$20k/mês; CSLL 9%; bases 32% consultas e 8%/12% exames se equiparação, senão 32% tudo; ISS configurável. Sem PIS/COFINS (extintos).</li>
@@ -271,7 +291,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f8fafc}
 </ul>
 </div>
 </main>
-<footer class="text-center text-xs text-slate-400 mt-8">Simulador v8.3 educacional — valide com contador/advogado. Não considera retenções, receitas financeiras, créditos presumidos específicos nem benefícios municipais.</footer>
+<footer class="text-center text-xs text-slate-400 mt-8">Simulador v8.4 educacional — valide com contador/advogado. Não considera retenções, receitas financeiras, créditos presumidos específicos nem benefícios municipais.</footer>
 
 <script>
 const ANEXO_III=[
@@ -307,25 +327,31 @@ let chart=null;
 const $=id=>document.getElementById(id);
 const fmtC=v=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v);
 const fmtP=v=>(v*100).toFixed(2).replace('.',',')+'%';
-const STORE_KEY='simClinica2027v83';
+const STORE_KEY='simClinica2027v84';
+function clamp0(v){const n=parseFloat(v);return (isFinite(n)&&n>0)?n:0;}
 function histRecArr(P){const avg=(P.rbt12||0)/12;const a=[];for(let i=0;i<12;i++){const el=document.getElementById('p-h'+i);const raw=el&&el.value!==''?parseFloat(el.value):NaN;a.push(isFinite(raw)&&raw>=0?raw:avg);}return a;}
-function params(){const rbt12=parseFloat($('p-rbt12').value)||0;return{cenario:$('p-cenario').value,rbt12,folha12:$('p-semfolha').checked?0:(parseFloat($('p-folha12').value)||0),semFolha:$('p-semfolha').checked,iss:Math.min(5,Math.max(2,parseFloat($('p-iss').value)||5))/100,eleg:(parseFloat($('p-eleg').value)||0)/100,anexo:$('p-anexo').value,equip:$('p-equip').checked,showInss:$('p-inss').checked,cbs:(parseFloat($('p-cbs').value)||0)/100,ibsE:(parseFloat($('p-ibsE').value)||0)/100,ibsM:(parseFloat($('p-ibsM').value)||0)/100,fornReg:Math.min(100,Math.max(0,parseFloat($('p-fornreg').value)||0))/100,periodo:$('p-periodo').value,histRec:histRecArr({rbt12})};}
+function histFolhaArr(P){const avg=(P.folha12||0)/12;const a=[];for(let i=0;i<12;i++){const el=document.getElementById('p-f'+i);const raw=el&&el.value!==''?parseFloat(el.value):NaN;a.push(isFinite(raw)&&raw>=0?raw:avg);}return a;}
+function params(){const rbt12=clamp0($('p-rbt12').value);const folha12raw=clamp0($('p-folha12').value);const semFolha=$('p-semfolha').checked;const nova=$('p-nova')&&$('p-nova').checked;return{cenario:$('p-cenario').value,rbt12,folha12:semFolha?0:folha12raw,semFolha,nova:!!nova,iss:Math.min(5,Math.max(2,parseFloat($('p-iss').value)||5))/100,eleg:Math.min(100,Math.max(0,parseFloat($('p-eleg').value)||0))/100,anexo:$('p-anexo').value,equip:$('p-equip').checked,showInss:$('p-inss').checked,cbs:clamp0($('p-cbs').value)/100,ibsE:clamp0($('p-ibsE').value)/100,ibsM:clamp0($('p-ibsM').value)/100,fornReg:Math.min(100,Math.max(0,parseFloat($('p-fornreg').value)||0))/100,periodo:$('p-periodo').value,histRec:histRecArr({rbt12}),histFolha:histFolhaArr({folha12:semFolha?0:folha12raw})};}
 function getFaixa(rbt12,tab){for(const f of tab){if(rbt12<=f.lim)return f;}return tab[tab.length-1];}
 function switchTab(id){['tab-sim','tab-lp-det','tab-sh-det','tab-sp-det'].forEach(t=>$(t).classList.add('hidden'));['btn-tab-sim','btn-tab-lp-det','btn-tab-sh-det','btn-tab-sp-det'].forEach(b=>{$(b).classList.remove('active','text-blue-600');$(b).classList.add('text-slate-500');});$(id).classList.remove('hidden');const b='btn-'+id;$(b).classList.add('active','text-blue-600');}
-function updateVal(i,f,v){monthsData[i][f]=parseFloat(v)||0;markDirty();render();}
-function resetDefaults(){try{localStorage.removeItem(STORE_KEY);}catch(e){}monthsData=JSON.parse(JSON.stringify(initialData));$('p-cenario').value='cbs';$('p-rbt12').value=600000;$('p-folha12').value=120000;$('p-semfolha').checked=false;$('p-iss').value=5;$('p-eleg').value=80;$('p-anexo').value='auto';$('p-equip').checked=true;$('p-inss').checked=true;$('p-cbs').value=8.7;$('p-ibsE').value=0.05;$('p-ibsM').value=0.05;$('p-fornreg').value=100;$('p-periodo').value='ano';for(let i=0;i<12;i++)$('p-h'+i).value='';setSaveStatus('Padrões restaurados (não salvos ainda).');render();}
-function limparTudo(){monthsData=initialData.map(r=>({m:r.m,cons:0,exam:0,pur:0,exp:0,folha:0}));$('p-rbt12').value='';$('p-folha12').value='';$('p-semfolha').checked=false;for(let i=0;i<12;i++)$('p-h'+i).value='';setSaveStatus('Valores zerados (em branco). Preencha os meses e clique em “Salvar valores”.');markDirty();render();setSaveStatus('Valores zerados (em branco). Preencha os meses e clique em “Salvar valores”.');}
-function collectParamsRaw(){const h={};for(let i=0;i<12;i++)h['h'+i]=$('p-h'+i).value;return{cenario:$('p-cenario').value,rbt12:$('p-rbt12').value,folha12:$('p-folha12').value,semFolha:$('p-semfolha').checked,iss:$('p-iss').value,eleg:$('p-eleg').value,anexo:$('p-anexo').value,equip:$('p-equip').checked,showInss:$('p-inss').checked,cbs:$('p-cbs').value,ibsE:$('p-ibsE').value,ibsM:$('p-ibsM').value,fornReg:$('p-fornreg').value,periodo:$('p-periodo').value,hist:h};}
-function applyParamsRaw(p){if(!p)return;if(p.cenario)$('p-cenario').value=(p.cenario==='transicao'?'cbs':p.cenario);if(p.rbt12!==undefined)$('p-rbt12').value=p.rbt12;if(p.folha12!==undefined)$('p-folha12').value=p.folha12;if(p.semFolha!==undefined)$('p-semfolha').checked=!!p.semFolha;if(p.iss!==undefined)$('p-iss').value=p.iss;if(p.eleg!==undefined)$('p-eleg').value=p.eleg;if(p.anexo)$('p-anexo').value=p.anexo;if(p.equip!==undefined)$('p-equip').checked=!!p.equip;if(p.showInss!==undefined)$('p-inss').checked=!!p.showInss;if(p.cbs!==undefined)$('p-cbs').value=p.cbs;if(p.ibsE!==undefined)$('p-ibsE').value=p.ibsE;if(p.ibsM!==undefined)$('p-ibsM').value=p.ibsM;if(p.fornReg!==undefined)$('p-fornreg').value=p.fornReg;else if(p.credito)$('p-fornreg').value=(p.credito==='cheia'?100:0);if(p.periodo)$('p-periodo').value=p.periodo;if(p.hist){for(let i=0;i<12;i++)if(p.hist['h'+i]!==undefined)$('p-h'+i).value=p.hist['h'+i];}}
+function updateVal(i,f,v){const n=parseFloat(v);monthsData[i][f]=(isFinite(n)&&n>0)?n:0;markDirty();render();}
+function resetDefaults(){try{localStorage.removeItem(STORE_KEY);}catch(e){}monthsData=JSON.parse(JSON.stringify(initialData));$('p-cenario').value='cbs';$('p-rbt12').value=600000;$('p-folha12').value=120000;$('p-semfolha').checked=false;if($('p-nova'))$('p-nova').checked=false;$('p-iss').value=5;$('p-eleg').value=80;$('p-anexo').value='auto';$('p-equip').checked=true;$('p-inss').checked=true;$('p-cbs').value=8.7;$('p-ibsE').value=0.05;$('p-ibsM').value=0.05;$('p-fornreg').value=100;$('p-periodo').value='ano';for(let i=0;i<12;i++){$('p-h'+i).value='';$('p-f'+i).value='';}setSaveStatus('Padrões restaurados (não salvos ainda).');render();}
+function limparTudo(){monthsData=initialData.map(r=>({m:r.m,cons:0,exam:0,pur:0,exp:0,folha:0}));$('p-rbt12').value='';$('p-folha12').value='';$('p-semfolha').checked=false;if($('p-nova'))$('p-nova').checked=false;for(let i=0;i<12;i++){$('p-h'+i).value='';$('p-f'+i).value='';}setSaveStatus('Valores zerados (em branco). Preencha os meses e clique em “Salvar valores”.');markDirty();render();setSaveStatus('Valores zerados (em branco). Preencha os meses e clique em “Salvar valores”.');}
+function collectParamsRaw(){const h={};for(let i=0;i<12;i++)h['h'+i]=$('p-h'+i).value;const f={};for(let i=0;i<12;i++)f['f'+i]=$('p-f'+i).value;return{cenario:$('p-cenario').value,rbt12:$('p-rbt12').value,folha12:$('p-folha12').value,semFolha:$('p-semfolha').checked,nova:$('p-nova')?$('p-nova').checked:false,iss:$('p-iss').value,eleg:$('p-eleg').value,anexo:$('p-anexo').value,equip:$('p-equip').checked,showInss:$('p-inss').checked,cbs:$('p-cbs').value,ibsE:$('p-ibsE').value,ibsM:$('p-ibsM').value,fornReg:$('p-fornreg').value,periodo:$('p-periodo').value,hist:h,histFolha:f};}
+function applyParamsRaw(p){if(!p)return;if(p.cenario)$('p-cenario').value=(p.cenario==='transicao'?'cbs':p.cenario);if(p.rbt12!==undefined)$('p-rbt12').value=p.rbt12;if(p.folha12!==undefined)$('p-folha12').value=p.folha12;if(p.semFolha!==undefined)$('p-semfolha').checked=!!p.semFolha;if(p.nova!==undefined&&$('p-nova'))$('p-nova').checked=!!p.nova;if(p.iss!==undefined)$('p-iss').value=p.iss;if(p.eleg!==undefined)$('p-eleg').value=p.eleg;if(p.anexo)$('p-anexo').value=p.anexo;if(p.equip!==undefined)$('p-equip').checked=!!p.equip;if(p.showInss!==undefined)$('p-inss').checked=!!p.showInss;if(p.cbs!==undefined)$('p-cbs').value=p.cbs;if(p.ibsE!==undefined)$('p-ibsE').value=p.ibsE;if(p.ibsM!==undefined)$('p-ibsM').value=p.ibsM;if(p.fornReg!==undefined)$('p-fornreg').value=p.fornReg;else if(p.credito)$('p-fornreg').value=(p.credito==='cheia'?100:0);if(p.periodo)$('p-periodo').value=p.periodo;if(p.hist){for(let i=0;i<12;i++)if(p.hist['h'+i]!==undefined)$('p-h'+i).value=p.hist['h'+i];}if(p.histFolha){for(let i=0;i<12;i++)if(p.histFolha['f'+i]!==undefined)$('p-f'+i).value=p.histFolha['f'+i];}}
 function setSaveStatus(t){$('save-status').textContent=t;}
 function markDirty(){setSaveStatus('● Alterações não salvas — clique em “Salvar valores”.');}
 function saveData(){try{const payload={months:monthsData,params:collectParamsRaw(),savedAt:new Date().toISOString()};localStorage.setItem(STORE_KEY,JSON.stringify(payload));const d=new Date(payload.savedAt);setSaveStatus('✓ Salvo em '+d.toLocaleDateString('pt-BR')+' às '+d.toLocaleTimeString('pt-BR')+'. Os valores serão mantidos ao fechar e reabrir.');}catch(e){setSaveStatus('Não foi possível salvar neste navegador (localStorage bloqueado).');}}
-function loadSaved(){try{let raw=localStorage.getItem(STORE_KEY)||localStorage.getItem('simClinica2027v82')||localStorage.getItem('simClinica2027v8')||localStorage.getItem('simClinica2027v7')||localStorage.getItem('simClinica2027v6')||localStorage.getItem('simClinica2027v5')||localStorage.getItem('simClinica2027v4')||localStorage.getItem('simClinica2027v3')||localStorage.getItem('simClinica2027v2');if(!raw)return false;const data=JSON.parse(raw);if(!data||!Array.isArray(data.months)||data.months.length!==12)return false;monthsData=data.months.map((r,i)=>({m:(initialData[i]||{}).m||('Mês '+(i+1)),cons:+r.cons||0,exam:+r.exam||0,pur:+r.pur||0,exp:+r.exp||0,folha:+r.folha||0}));applyParamsRaw(data.params);if(data.savedAt){const d=new Date(data.savedAt);setSaveStatus('✓ Valores salvos de '+d.toLocaleDateString('pt-BR')+' às '+d.toLocaleTimeString('pt-BR')+' restaurados.');}return true;}catch(e){return false;}}
-['p-cenario','p-rbt12','p-folha12','p-semfolha','p-iss','p-eleg','p-fornreg','p-anexo','p-periodo','p-equip','p-inss','p-cbs','p-ibsE','p-ibsM','p-h0','p-h1','p-h2','p-h3','p-h4','p-h5','p-h6','p-h7','p-h8','p-h9','p-h10','p-h11'].forEach(id=>$(id).addEventListener('input',()=>{markDirty();render();}));
+function loadSaved(){try{let raw=localStorage.getItem(STORE_KEY)||localStorage.getItem('simClinica2027v83')||localStorage.getItem('simClinica2027v82')||localStorage.getItem('simClinica2027v8')||localStorage.getItem('simClinica2027v7')||localStorage.getItem('simClinica2027v6')||localStorage.getItem('simClinica2027v5')||localStorage.getItem('simClinica2027v4')||localStorage.getItem('simClinica2027v3')||localStorage.getItem('simClinica2027v2');if(!raw)return false;const data=JSON.parse(raw);if(!data||!Array.isArray(data.months)||data.months.length!==12)return false;monthsData=data.months.map((r,i)=>({m:(initialData[i]||{}).m||('Mês '+(i+1)),cons:clamp0(r.cons),exam:clamp0(r.exam),pur:clamp0(r.pur),exp:clamp0(r.exp),folha:clamp0(r.folha)}));applyParamsRaw(data.params);if(data.savedAt){const d=new Date(data.savedAt);setSaveStatus('✓ Valores salvos de '+d.toLocaleDateString('pt-BR')+' às '+d.toLocaleTimeString('pt-BR')+' restaurados.');}return true;}catch(e){return false;}}
+function exportCSV(){try{const rows=window._lastRows||[];if(!rows.length){setSaveStatus('Nada para exportar.');return;}const head=['mes','faturamento','folha_mes','FPS12_12m_ant','RBT12_12m_ant','fatorR','anexo_faixa','aliq_efetiva','LP','Hibrido','Puro'];const lines=[head.join(';')];rows.forEach((r,i)=>{lines.push([monthsData[i].m,(r.fat||0).toFixed(2),(r.folhaMes||0).toFixed(2),(r.folha12m||0).toFixed(2),(r.rbt12||0).toFixed(2),(r.fatorRmes||0).toFixed(6),r.fx.label,(r.aliqEf||0).toFixed(6),(r.lpTotal||0).toFixed(2),(r.shTotal||0).toFixed(2),(r.spTotal||0).toFixed(2)].join(';'));});const blob=new Blob(["\uFEFF"+lines.join('\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='simulador-clinica-2027-v84.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}catch(e){setSaveStatus('Falha ao exportar CSV.');}}
+['p-cenario','p-rbt12','p-folha12','p-semfolha','p-nova','p-iss','p-eleg','p-fornreg','p-anexo','p-periodo','p-equip','p-inss','p-cbs','p-ibsE','p-ibsM','p-h0','p-h1','p-h2','p-h3','p-h4','p-h5','p-h6','p-h7','p-h8','p-h9','p-h10','p-h11','p-f0','p-f1','p-f2','p-f3','p-f4','p-f5','p-f6','p-f7','p-f8','p-f9','p-f10','p-f11'].forEach(id=>{const el=$(id);if(el)el.addEventListener('input',()=>{markDirty();render();});});
 
 function render(){
 const P=params();
-$('p-folha12').disabled=P.semFolha;
+$('p-folha12').disabled=P.semFolha||P.nova;
+$('p-rbt12').disabled=P.nova;
+for(let i=0;i<12;i++){const f=document.getElementById('p-f'+i);if(f)f.disabled=P.semFolha;const h=document.getElementById('p-h'+i);if(h)h.disabled=P.nova;}
+if(P.nova){$('p-folha12').title='Empresa nova: FPS12 proporcional, inicial ignorado';}else{$('p-folha12').title='';}
 const ivaTotal=P.cenario==='cbs'?P.cbs:(P.cbs+P.ibsE+P.ibsM);
 const ivaEfet=ivaTotal*0.4;
 // Crédito sobre compras: cheio (alíq. total) se fornecedor do regime regular;
@@ -335,18 +361,17 @@ const aliqCred=P.fornReg*ivaTotal+(1-P.fornReg)*ivaEfet;
 $('iva-total').textContent=P.cenario==='cbs'?fmtP(P.cbs)+' (só CBS; IBS não)':fmtP(ivaTotal);
 $('iva-efet').textContent=fmtP(ivaEfet)+' (crédito a '+fmtP(aliqCred)+')'+(P.cenario==='cbs'?' • só CBS 2027':'');
 const mediaRBT=P.rbt12/12;
-const mediaFolha=P.folha12/12;
 let accRec=0, accFolha=0;
-// Janela dos 12 meses ANTERIORES ao mês (PCGDAS / LC 123 art. 18):
-// jan = RBT12 cheio (sem a receita de jan); fev = jan − mês ant. real + receita de jan; etc.
-// O mês histórico que sai da janela é o valor digitado (p-h0…p-h11), senão a média.
-// FPS12 idem (folha dos 12m anteriores). Fator R = FPS12 ÷ RBT12 → ≥28% III, senão V.
+// Janela dos 12 meses ANTERIORES ao mês (PCGDAS / LC 123 art. 18 §5º-K):
+// jan = RBT12/FPS12 cheio (sem jan/27); fev = − Jan ant. (p-h0/p-f0) + jan/27; etc.
+// Em branco = média. Empresa nova = proporcional (acumulado ×12 ÷ meses).
 const rows=monthsData.map((row,idx)=>{
 const fat=row.cons+row.exam;
 const folhaMes=P.semFolha?0:(row.folha||0);
-let histDrop=0;for(let i=0;i<idx;i++)histDrop+=P.histRec[i];
-const rbt12=Math.max(0,P.rbt12-histDrop+accRec);
-const folha12m=P.semFolha?0:Math.max(0,P.folha12-idx*mediaFolha+accFolha);
+let histDropRec=0, histDropFol=0;for(let i=0;i<idx;i++){histDropRec+=P.histRec[i];histDropFol+=P.histFolha[i];}
+let rbt12, folha12m;
+if(P.nova){rbt12=idx===0?0:Math.max(0,accRec*12/idx);folha12m=(P.semFolha||idx===0)?0:Math.max(0,accFolha*12/idx);}
+else{rbt12=Math.max(0,P.rbt12-histDropRec+accRec);folha12m=P.semFolha?0:Math.max(0,P.folha12-histDropFol+accFolha);}
 const fatorRmes=rbt12?folha12m/rbt12:0;
 const anexoMes=P.anexo==='auto'?(fatorRmes>=0.28?'III':'V'):P.anexo;
 const tabMes=anexoMes==='III'?ANEXO_III:ANEXO_V;
@@ -417,6 +442,8 @@ const win=[{id:'card-lp',v:tLP},{id:'card-sh',v:tSH},{id:'card-sp',v:tSP}].sort(
 $(win.id).classList.add('border-emerald-500','border-2');$(win.id).classList.remove('border-slate-200');
 $('badge-lp').style.display=win.id==='card-lp'?'block':'none';
 let alertas=[];
+if(!P.nova){const somaHistRec=P.histRec.reduce((s,v)=>s+v,0);if(Math.abs(somaHistRec-P.rbt12)>Math.max(1,P.rbt12*0.005)&&P.rbt12>0)alertas.push('Soma hist. receita '+fmtC(somaHistRec)+' ≠ RBT12 '+fmtC(P.rbt12));if(!P.semFolha){const somaHistFol=P.histFolha.reduce((s,v)=>s+v,0);if(Math.abs(somaHistFol-P.folha12)>Math.max(1,P.folha12*0.005)&&P.folha12>0)alertas.push('Soma hist. folha '+fmtC(somaHistFol)+' ≠ FPS12 '+fmtC(P.folha12));}}
+if(P.nova)alertas.push('Empresa nova: RBT12/FPS12 proporcionalizados');
 if(dRows.some(r=>r.adic>0))alertas.push('Adicional IRPJ ativo');
 if(dRows.some(r=>r.isIII5))alertas.push('Anexo III 5ª fx: ISS fixo 5% + federais redistribuídos (nota LC 123)');
 if(dRows.some(r=>r.issFora>0))alertas.push('6ª faixa: ISS fora do DAS (recolhido à parte)');
@@ -453,8 +480,8 @@ $('simulation-tfoot').innerHTML=`<tr class="bg-slate-900 text-white text-xs">
 <td class="px-1.5 py-3 text-right tabular-nums">${fmtC(visIdx.reduce((s,i)=>s+monthsData[i].exam,0))}</td>
 <td class="px-2.5 py-3 text-right font-black tabular-nums text-blue-200">${fmtC(tFat)}</td>
 <td class="px-1.5 py-3 text-right tabular-nums text-blue-200">${fmtC(tFolhaMes)}</td>
-<td class="px-2 py-3 text-right tabular-nums text-violet-200" title="FPS12 do último mês visível">${fmtC(dRows.length?dRows[dRows.length-1].folha12m:0)}</td>
-<td class="px-2 py-3 text-right tabular-nums">${fmtC(dRows.length?dRows[dRows.length-1].rbt12:0)}</td>
+<td class="px-2 py-3 text-right tabular-nums text-violet-200" title="FPS12 da janela do último mês visível (12m anteriores, sem o mês corrente)">${fmtC(dRows.length?dRows[dRows.length-1].folha12m:0)}</td>
+<td class="px-2 py-3 text-right tabular-nums" title="RBT12 da janela do último mês visível (12m anteriores, sem o mês corrente)">${fmtC(dRows.length?dRows[dRows.length-1].rbt12:0)}</td>
 <td class="px-2 py-3 text-right tabular-nums">${fmtP(dRows.length&&dRows[dRows.length-1].rbt12?dRows[dRows.length-1].folha12m/dRows[dRows.length-1].rbt12:0)}</td>
 <td class="px-2 py-3"></td>
 <td class="px-1.5 py-3 text-right tabular-nums">${fmtC(visIdx.reduce((s,i)=>s+monthsData[i].pur,0))}</td>
@@ -467,7 +494,8 @@ $('lp-det-tfoot').innerHTML=`<tr><td class="px-2 py-2">TOTAL</td><td></td><td cl
 const shB=$('sh-det-tbody');shB.innerHTML='';visIdx.forEach((ri,k)=>{const r=dRows[k];shB.innerHTML+=`<tr><td class="px-2 py-1 font-semibold">${monthsData[ri].m}</td><td class="px-2 py-1">${r.fx.label}</td><td class="px-2 py-1">${fmtC(r.das)}</td><td class="px-2 py-1 text-rose-600">-${fmtC(r.pisCofinsDas)}</td><td class="px-2 py-1 font-bold">${fmtC(r.dasInterno)}</td><td class="px-2 py-1">${fmtC(r.cbsLiq)}</td><td class="px-2 py-1 font-bold">${fmtC(r.shTotal)}${r.issFora>0?'<div class="text-[10px] font-normal text-slate-500">inclui ISS fora '+fmtC(r.issFora)+'</div>':''}</td></tr>`;});
 $('sh-det-tfoot').innerHTML=`<tr><td class="px-2 py-2">TOTAL</td><td></td><td class="px-2 py-2">${fmtC(sum('das'))}</td><td class="px-2 py-2">-${fmtC(sum('pisCofinsDas'))}</td><td class="px-2 py-2">${fmtC(sum('dasInterno'))}</td><td class="px-2 py-2">${fmtC(sum('cbsLiq'))}</td><td class="px-2 py-2">${fmtC(tSH)}</td></tr>`;
 const spB=$('sp-det-tbody');spB.innerHTML='';visIdx.forEach((ri,k)=>{const r=dRows[k];spB.innerHTML+=`<tr><td class="px-2 py-1 font-semibold">${monthsData[ri].m}</td><td class="px-2 py-1">${fmtC(r.folhaMes)}</td><td class="px-2 py-1" title="Soma da folha dos 12 meses anteriores ao mês">${fmtC(r.folha12m)}</td><td class="px-2 py-1" title="RBT12 dos 12 meses anteriores ao mês">${fmtC(r.rbt12)}</td><td class="px-2 py-1" title="Fator R = FPS12 ${fmtC(r.folha12m)} ÷ RBT12 ${fmtC(r.rbt12)}">${fmtP(r.fatorRmes)}</td><td class="px-2 py-1">${r.fx.label}</td><td class="px-2 py-1">${fmtP(r.aliqEf)}</td><td class="px-2 py-1">${fmtC(r.das)}</td><td class="px-2 py-1">${fmtC(r.issNoDas)}${r.issFora>0?'<div class="text-[10px] font-normal text-slate-500">+ISS fora '+fmtC(r.issFora)+'</div>':''}</td><td class="px-2 py-1 font-bold">${fmtC(r.spTotal)}</td></tr>`;});
-$('sp-det-tfoot').innerHTML=`<tr><td class="px-2 py-2">TOTAL</td><td class="px-2 py-2">${fmtC(tFolhaMes)}</td><td class="px-2 py-2">${fmtC(dRows.length?dRows[dRows.length-1].folha12m:0)}*</td><td class="px-2 py-2">${fmtC(dRows.length?dRows[dRows.length-1].rbt12:0)}*</td><td></td><td></td><td></td><td class="px-2 py-2">${fmtC(sum('das'))}</td><td></td><td class="px-2 py-2">${fmtC(tSP)}</td></tr>`;
+$('sp-det-tfoot').innerHTML=`<tr><td class="px-2 py-2">TOTAL</td><td class="px-2 py-2">${fmtC(tFolhaMes)}</td><td class="px-2 py-2" title="Janela do último mês visível (12m anteriores)">${fmtC(dRows.length?dRows[dRows.length-1].folha12m:0)}*</td><td class="px-2 py-2" title="Janela do último mês visível (12m anteriores)">${fmtC(dRows.length?dRows[dRows.length-1].rbt12:0)}*</td><td></td><td></td><td></td><td class="px-2 py-2">${fmtC(sum('das'))}</td><td></td><td class="px-2 py-2">${fmtC(tSP)}</td></tr>`;
+window._lastRows=rows;
 const ctx=$('monthlyTaxChart').getContext('2d');if(chart)chart.destroy();
 chart=new Chart(ctx,{type:'bar',data:{labels:visIdx.map(i=>monthsData[i].m),datasets:[{label:'LP',data:dRows.map(r=>r.lpTotal),backgroundColor:'#10b981'},{label:'Híbrido',data:dRows.map(r=>r.shTotal),backgroundColor:'#3b82f6'},{label:'Puro',data:dRows.map(r=>r.spTotal),backgroundColor:'#f59e0b'}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}}}});
 }
