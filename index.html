@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulador Tributário 2027 v8.4 - Clínica Médica</title>
+<title>Simulador Tributário 2027 v8.5 - Clínica Médica</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -22,8 +22,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f8fafc}
 <header class="bg-slate-900 text-white py-8 px-4 sm:px-8 border-b-4 border-emerald-500">
 <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between gap-4">
 <div>
-<span class="bg-emerald-600 text-xs font-bold uppercase px-3 py-1 rounded-full mb-2 inline-block">v8.4 • EC 132/2023 + LC 123/2006 + LC 214/2025 • Transição 2027</span>
-<h1 class="text-2xl sm:text-3xl font-extrabold">Simulador Tributário 2027 v8.4: Clínica Médica</h1>
+<span class="bg-emerald-600 text-xs font-bold uppercase px-3 py-1 rounded-full mb-2 inline-block">v8.5 • EC 132/2023 + LC 123/2006 + LC 214/2025 + LC 224/2025 • Transição 2027</span>
+<h1 class="text-2xl sm:text-3xl font-extrabold">Simulador Tributário 2027 v8.5: Clínica Médica</h1>
 <p class="text-slate-400 text-sm mt-1">Lucro Presumido (adicional IRPJ; PIS/COFINS extintos → CBS) vs Simples progressivo (Fator R mensal + RBT12) vs Híbrido</p>
 </div>
 <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-right">
@@ -42,8 +42,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f8fafc}
 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 text-xs">
 <label class="block">Cenário 2027
 <select id="p-cenario" class="w-full p-2 rounded-lg input-blue border border-blue-300">
-<option value="cbs" selected>2027: CBS (PIS/COFINS extintos)</option>
-<option value="cheio">CBS + IBS (pós-reforma)</option>
+<option value="cbs" selected>2027 oficial (CBS−0,1pp + IBS 0,1% teste)</option>
+<option value="cheio">CBS + IBS cheio (pós-reforma)</option>
 </select>
 </label>
 <label class="block">CBS % <span class="text-slate-400">(editável – Senado)</span>
@@ -279,19 +279,19 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f8fafc}
 </details>
 
 <div class="bg-blue-50 border-l-4 border-blue-600 p-5 rounded-r-2xl text-xs text-blue-900">
-<b>Premissas v8.4 (EC 132/2023, LC 214/2025; LC 123/2006 redação LC 155/2016):</b>
+<b>Premissas v8.5 (EC 132/2023, LC 214/2025, LC 224/2025; LC 123/2006 redação LC 155/2016):</b>
 <ul class="list-disc ml-5 mt-1 space-y-1">
-<li><b>PIS/COFINS extintos a partir de 2027</b> (EC 132/2023, LC 214/2025) — substituídos pela CBS. Não são cobrados à parte no LP nem no Híbrido (sem bitributação com a CBS). Na partilha do Simples (Anexos III e V da LC 123/2006) os percentuais de PIS/COFINS continuam dentro do DAS, conforme a lei.</li>
-<li><b>RBT12/FPS12 = 12 meses ANTERIORES ao mês (extrato PCGDAS, sem o mês corrente):</b> janeiro usa o RBT12/FPS12 inicial cheio. Em fevereiro sai Jan ant. (p-h0 / p-f0) e entra janeiro/27, e assim por diante. Em branco usa a média. Divergência soma(hist) × RBT12/FPS12 gera alerta ⚠. <b>Empresa nova:</b> proporcionaliza (acumulado ×12 ÷ meses decorridos). <b>Fator R = FPS12 ÷ RBT12</b> mensal; ≥28% → Anexo III (§5º-J), &lt;28% → Anexo V (§5º-M).</li>
+<li><b>PIS/COFINS extintos a partir de 2027</b> (EC 132/2023, LC 214/2025 art.408) — substituídos pela CBS. Não são cobrados à parte no LP nem no Híbrido. Na partilha do Simples os percentuais de PIS/COFINS continuam dentro do DAS, conforme a lei.</li>
+<li><b>RBT12/FPS12 = 12 meses ANTERIORES ao mês (extrato PCGDAS, sem o mês corrente):</b> janeiro usa o RBT12/FPS12 inicial cheio. Em fevereiro sai Jan ant. (p-h0 / p-f0) e entra janeiro/27, e assim por diante. Em branco usa a média. Divergência soma(hist) × RBT12/FPS12 gera alerta ⚠. <b>Empresa nova:</b> proporcionaliza (acumulado ×12 ÷ meses). <b>Fator R = FPS12 ÷ RBT12</b> mensal (inclua salários + pró-labore + encargos na folha); ≥28% → Anexo III (§5º-J), &lt;28% → Anexo V (§5º-M). <b>Teto Simples R$4,8M:</b> acima disso há alerta de desenquadramento — o simulador mantém a última faixa apenas como referência.</li>
 <li>Opção <b>Sem folha</b>: zera folha 12m e folha mensal → Fator R 0% (Anexo V) e INSS zero no LP.</li>
-<li>Simples conforme partilha oficial acima. <b>Híbrido (LC 214/2025):</b> IBS/CBS fora do DAS pelo regime regular (débito − crédito; apuração separada CBS × IBS), DAS mantém IRPJ/CSLL/CPP/ISS; desconto no DAS = % PIS/COFINS da faixa (parcela dos tributos sobre consumo que a CBS cobre por fora). Puro: IBS/CBS dentro do DAS, sem crédito. Bônus do híbrido fora da conta: transfere créditos cheios ao cliente PJ e pode gerar ressarcimento.</li>
-<li>LP: IRPJ 15% + adicional 10% sobre base &gt; R$20k/mês; CSLL 9%; bases 32% consultas e 8%/12% exames se equiparação, senão 32% tudo; ISS configurável. Sem PIS/COFINS (extintos).</li>
-<li>IVA 2027 editável (padrão CBS 8,7% + IBS 0,05% + 0,05% = 8,80% → <b>3,52% débito da clínica</b> com −60% saúde). Cenário <b>2027: CBS</b> usa só a CBS; cenário <b>CBS + IBS</b> soma os três. <b>Crédito s/ compras:</b> cheio (8,80%) se fornecedor do regime regular; reduzido (3,52%) se do Simples — informe o % no parâmetro. O crédito que a clínica <b>transfere</b> ao cliente é sempre o reduzido.</li>
-<li>INSS LP 27,8% s/ folha mensal, exibido à parte para comparação justa com o CPP do Simples.</li>
+<li>Simples conforme partilha oficial acima. <b>Híbrido (LC 214/2025 art.41 §3º, art.47 §9º; CGSN 190/191):</b> IBS/CBS fora do DAS pelo regime regular (débito − crédito), DAS mantém IRPJ/CSLL/CPP/ISS; <b>desconto no DAS = % PIS/COFINS da faixa é estimativa</b> (a repartição oficial CBS/IBS no Simples virá por lei ordinária). <b>Crédito s/ compras de fornecedor Simples é estimado</b> (tabela oficial do Comitê Gestor/RFB ainda pendente). RBT12 no híbrido pode estar levemente superestimado, pois valores de CBS/IBS por fora não integrariam a receita bruta do Simples. Puro: IBS/CBS dentro do DAS, sem crédito. Bônus do híbrido fora da conta: transfere créditos cheios ao cliente PJ e pode gerar ressarcimento. Opção set/mar com efeitos jan/jul.</li>
+<li>LP: IRPJ 15% + <b>adicional 10% trimestral</b> (Lei 9.249/95 art.3 §1º: 10% sobre base que exceder R$60k/tri, rateado no mês p/ exibição); CSLL 9%; bases 32% consultas e 8%/12% exames se equiparação, senão 32% tudo; <b>LC 224/2025: +10% na presunção sobre receita anual >R$5M</b> (8%→8,8%, 12%→13,2%, 32%→35,2% no excedente, limite trim R$1,25M com saldo e ajuste no 4º tri — IN RFB 2.306/2026); ISS configurável 2-5%. Sem PIS/COFINS (extintos). <b>Equiparação exige</b> sociedade empresária + ANVISA RDC 50 atrib.1-4; <b>simples consulta médica não qualifica</b> (COSIT 209/2024). Marque apenas se cumprir os requisitos.</li>
+<li>IVA 2027 editável (padrão CBS 8,7% + IBS 0,05% + 0,05% = 8,80% → <b>3,52% débito da clínica</b> com −60% saúde art.128-130 Anexo III NBS — <b>assume 100% da receita elegível</b>). Cenário <b>2027 oficial</b>: CBS −0,1pp + IBS 0,1% teste (EC 132 ADCT art.125-126); cenário <b>CBS + IBS</b>: soma cheia editável (pós-reforma). <b>Crédito s/ compras:</b> cheio se fornecedor do regime regular; reduzido se do Simples — informe o % (estimativa). O crédito que a clínica <b>transfere</b> ao cliente é sempre o reduzido.</li>
+<li>INSS LP 27,8% s/ folha mensal (média 20% + 5,8% terceiros + 2% RAT), exibido à parte para comparação com o CPP do Simples — ajuste ao seu RAT/FAP real.</li>
 </ul>
 </div>
 </main>
-<footer class="text-center text-xs text-slate-400 mt-8">Simulador v8.4 educacional — valide com contador/advogado. Não considera retenções, receitas financeiras, créditos presumidos específicos nem benefícios municipais.</footer>
+<footer class="text-center text-xs text-slate-400 mt-8">Simulador v8.5 educacional — valide com contador/advogado. Não considera retenções, receitas financeiras, créditos presumidos específicos nem benefícios municipais. LC 224/2025 aplicada de forma simplificada (anual com ajuste 4º tri).</footer>
 
 <script>
 const ANEXO_III=[
@@ -327,7 +327,7 @@ let chart=null;
 const $=id=>document.getElementById(id);
 const fmtC=v=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v);
 const fmtP=v=>(v*100).toFixed(2).replace('.',',')+'%';
-const STORE_KEY='simClinica2027v84';
+const STORE_KEY='simClinica2027v85';
 function clamp0(v){const n=parseFloat(v);return (isFinite(n)&&n>0)?n:0;}
 function histRecArr(P){const avg=(P.rbt12||0)/12;const a=[];for(let i=0;i<12;i++){const el=document.getElementById('p-h'+i);const raw=el&&el.value!==''?parseFloat(el.value):NaN;a.push(isFinite(raw)&&raw>=0?raw:avg);}return a;}
 function histFolhaArr(P){const avg=(P.folha12||0)/12;const a=[];for(let i=0;i<12;i++){const el=document.getElementById('p-f'+i);const raw=el&&el.value!==''?parseFloat(el.value):NaN;a.push(isFinite(raw)&&raw>=0?raw:avg);}return a;}
@@ -342,8 +342,8 @@ function applyParamsRaw(p){if(!p)return;if(p.cenario)$('p-cenario').value=(p.cen
 function setSaveStatus(t){$('save-status').textContent=t;}
 function markDirty(){setSaveStatus('● Alterações não salvas — clique em “Salvar valores”.');}
 function saveData(){try{const payload={months:monthsData,params:collectParamsRaw(),savedAt:new Date().toISOString()};localStorage.setItem(STORE_KEY,JSON.stringify(payload));const d=new Date(payload.savedAt);setSaveStatus('✓ Salvo em '+d.toLocaleDateString('pt-BR')+' às '+d.toLocaleTimeString('pt-BR')+'. Os valores serão mantidos ao fechar e reabrir.');}catch(e){setSaveStatus('Não foi possível salvar neste navegador (localStorage bloqueado).');}}
-function loadSaved(){try{let raw=localStorage.getItem(STORE_KEY)||localStorage.getItem('simClinica2027v83')||localStorage.getItem('simClinica2027v82')||localStorage.getItem('simClinica2027v8')||localStorage.getItem('simClinica2027v7')||localStorage.getItem('simClinica2027v6')||localStorage.getItem('simClinica2027v5')||localStorage.getItem('simClinica2027v4')||localStorage.getItem('simClinica2027v3')||localStorage.getItem('simClinica2027v2');if(!raw)return false;const data=JSON.parse(raw);if(!data||!Array.isArray(data.months)||data.months.length!==12)return false;monthsData=data.months.map((r,i)=>({m:(initialData[i]||{}).m||('Mês '+(i+1)),cons:clamp0(r.cons),exam:clamp0(r.exam),pur:clamp0(r.pur),exp:clamp0(r.exp),folha:clamp0(r.folha)}));applyParamsRaw(data.params);if(data.savedAt){const d=new Date(data.savedAt);setSaveStatus('✓ Valores salvos de '+d.toLocaleDateString('pt-BR')+' às '+d.toLocaleTimeString('pt-BR')+' restaurados.');}return true;}catch(e){return false;}}
-function exportCSV(){try{const rows=window._lastRows||[];if(!rows.length){setSaveStatus('Nada para exportar.');return;}const head=['mes','faturamento','folha_mes','FPS12_12m_ant','RBT12_12m_ant','fatorR','anexo_faixa','aliq_efetiva','LP','Hibrido','Puro'];const lines=[head.join(';')];rows.forEach((r,i)=>{lines.push([monthsData[i].m,(r.fat||0).toFixed(2),(r.folhaMes||0).toFixed(2),(r.folha12m||0).toFixed(2),(r.rbt12||0).toFixed(2),(r.fatorRmes||0).toFixed(6),r.fx.label,(r.aliqEf||0).toFixed(6),(r.lpTotal||0).toFixed(2),(r.shTotal||0).toFixed(2),(r.spTotal||0).toFixed(2)].join(';'));});const blob=new Blob(["\uFEFF"+lines.join('\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='simulador-clinica-2027-v84.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}catch(e){setSaveStatus('Falha ao exportar CSV.');}}
+function loadSaved(){try{let raw=localStorage.getItem(STORE_KEY)||localStorage.getItem('simClinica2027v84')||localStorage.getItem('simClinica2027v83')||localStorage.getItem('simClinica2027v82')||localStorage.getItem('simClinica2027v8')||localStorage.getItem('simClinica2027v7')||localStorage.getItem('simClinica2027v6')||localStorage.getItem('simClinica2027v5')||localStorage.getItem('simClinica2027v4')||localStorage.getItem('simClinica2027v3')||localStorage.getItem('simClinica2027v2');if(!raw)return false;const data=JSON.parse(raw);if(!data||!Array.isArray(data.months)||data.months.length!==12)return false;monthsData=data.months.map((r,i)=>({m:(initialData[i]||{}).m||('Mês '+(i+1)),cons:clamp0(r.cons),exam:clamp0(r.exam),pur:clamp0(r.pur),exp:clamp0(r.exp),folha:clamp0(r.folha)}));applyParamsRaw(data.params);if(data.savedAt){const d=new Date(data.savedAt);setSaveStatus('✓ Valores salvos de '+d.toLocaleDateString('pt-BR')+' às '+d.toLocaleTimeString('pt-BR')+' restaurados.');}return true;}catch(e){return false;}}
+function exportCSV(){try{const rows=window._lastRows||[];if(!rows.length){setSaveStatus('Nada para exportar.');return;}const head=['mes','faturamento','folha_mes','FPS12_12m_ant','RBT12_12m_ant','fatorR','anexo_faixa','aliq_efetiva','LP','Hibrido','Puro'];const lines=[head.join(';')];rows.forEach((r,i)=>{lines.push([monthsData[i].m,(r.fat||0).toFixed(2),(r.folhaMes||0).toFixed(2),(r.folha12m||0).toFixed(2),(r.rbt12||0).toFixed(2),(r.fatorRmes||0).toFixed(6),r.fx.label,(r.aliqEf||0).toFixed(6),(r.lpTotal||0).toFixed(2),(r.shTotal||0).toFixed(2),(r.spTotal||0).toFixed(2)].join(';'));});const blob=new Blob(["\uFEFF"+lines.join('\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='simulador-clinica-2027-v85.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}catch(e){setSaveStatus('Falha ao exportar CSV.');}}
 ['p-cenario','p-rbt12','p-folha12','p-semfolha','p-nova','p-iss','p-eleg','p-fornreg','p-anexo','p-periodo','p-equip','p-inss','p-cbs','p-ibsE','p-ibsM','p-h0','p-h1','p-h2','p-h3','p-h4','p-h5','p-h6','p-h7','p-h8','p-h9','p-h10','p-h11','p-f0','p-f1','p-f2','p-f3','p-f4','p-f5','p-f6','p-f7','p-f8','p-f9','p-f10','p-f11'].forEach(id=>{const el=$(id);if(el)el.addEventListener('input',()=>{markDirty();render();});});
 
 function render(){
@@ -352,16 +352,34 @@ $('p-folha12').disabled=P.semFolha||P.nova;
 $('p-rbt12').disabled=P.nova;
 for(let i=0;i<12;i++){const f=document.getElementById('p-f'+i);if(f)f.disabled=P.semFolha;const h=document.getElementById('p-h'+i);if(h)h.disabled=P.nova;}
 if(P.nova){$('p-folha12').title='Empresa nova: FPS12 proporcional, inicial ignorado';}else{$('p-folha12').title='';}
-const ivaTotal=P.cenario==='cbs'?P.cbs:(P.cbs+P.ibsE+P.ibsM);
+const cbsRef=Math.max(0,P.cbs-0.001);
+const ibsTeste=0.001;
+const ivaTotal=P.cenario==='cbs'?(cbsRef+ibsTeste):(P.cbs+P.ibsE+P.ibsM);
 const ivaEfet=ivaTotal*0.4;
 // Crédito sobre compras: cheio (alíq. total) se fornecedor do regime regular;
-// reduzido (alíq. efetiva da clínica) se fornecedor do Simples. O crédito que a
+// reduzido (alíq. efetiva da clínica) se fornecedor do Simples — estimativa,
+// tabela oficial Comitê Gestor/RFB pendente (LC 214 art.47 §9º). O crédito que a
 // clínica TRANSFERE ao cliente é sempre o reduzido (ela tem redução de 60%).
 const aliqCred=P.fornReg*ivaTotal+(1-P.fornReg)*ivaEfet;
-$('iva-total').textContent=P.cenario==='cbs'?fmtP(P.cbs)+' (só CBS; IBS não)':fmtP(ivaTotal);
-$('iva-efet').textContent=fmtP(ivaEfet)+' (crédito a '+fmtP(aliqCred)+')'+(P.cenario==='cbs'?' • só CBS 2027':'');
+$('iva-total').textContent=P.cenario==='cbs'?fmtP(ivaTotal)+' (2027 oficial: CBS −0,1pp + IBS 0,1% teste)':fmtP(ivaTotal)+' (pós-reforma)';
+$('iva-efet').textContent=fmtP(ivaEfet)+' (crédito a '+fmtP(aliqCred)+')'+(P.cenario==='cbs'?' • 2027 oficial':'');
 const mediaRBT=P.rbt12/12;
 let accRec=0, accFolha=0;
+// LC 224/2025 (IN RFB 2.306/2026): +10% na presunção sobre receita anual >R$5M,
+// limite trim R$1,25M com saldo entre tris e ajuste no 4º tri.
+const fatsAll=monthsData.map(r=>Math.max(0,r.cons||0)+Math.max(0,r.exam||0));
+const qRev=[0,1,2,3].map(q=>fatsAll.slice(q*3,q*3+3).reduce((s,v)=>s+v,0));
+let saldoLC=0; const qExc=[0,0,0,0];
+for(let q=0;q<4;q++){const lim=1250000+saldoLC; if(qRev[q]>lim){qExc[q]=qRev[q]-lim; saldoLC=0;} else {qExc[q]=0; saldoLC=lim-qRev[q];}}
+const totalAn=fatsAll.reduce((s,v)=>s+v,0); const excTotAn=Math.max(0,totalAn-5000000);
+if(totalAn<=5000000){qExc[0]=qExc[1]=qExc[2]=qExc[3]=0;}
+else{const s03=qExc[0]+qExc[1]+qExc[2]; qExc[3]=Math.max(0,excTotAn-s03);}
+// Bases LP com LC 224 (pré-cálculo p/ adicional trimestral).
+const baseIRPJm=[], baseCSLLm=[], majorM=[];
+for(let idx=0;idx<12;idx++){const row=monthsData[idx]; const cons=Math.max(0,row.cons||0), exam=Math.max(0,row.exam||0); const q=Math.floor(idx/3); const ratio=qRev[q]>0?qExc[q]/qRev[q]:0; const consExc=cons*ratio, consN=cons-consExc, examExc=exam*ratio, examN=exam-examExc; const pE=P.equip?0.08:0.32, pC=P.equip?0.12:0.32; const bIR=consN*0.32+consExc*0.32*1.1+examN*pE+examExc*pE*1.1; const bCS=consN*0.32+consExc*0.32*1.1+examN*pC+examExc*pC*1.1; baseIRPJm.push(bIR); baseCSLLm.push(bCS); majorM.push(qExc[q]>0);}
+// Adicional IRPJ trimestral Lei 9.249/95 art.3 §1º: 10% sobre base_trim >60k, rateado no mês p/ exibição.
+const adicM=new Array(12).fill(0);
+for(let q=0;q<4;q++){const sB=baseIRPJm.slice(q*3,q*3+3).reduce((s,v)=>s+v,0); const adQ=Math.max(0,sB-60000)*0.10; for(let k=0;k<3;k++){const bi=baseIRPJm[q*3+k]; adicM[q*3+k]=sB>0?adQ*(bi/sB):0;}}
 // Janela dos 12 meses ANTERIORES ao mês (PCGDAS / LC 123 art. 18 §5º-K):
 // jan = RBT12/FPS12 cheio (sem jan/27); fev = − Jan ant. (p-h0/p-f0) + jan/27; etc.
 // Em branco = média. Empresa nova = proporcional (acumulado ×12 ÷ meses).
@@ -388,9 +406,10 @@ if(isIII5){const fed=aliqEf-0.05;issNoDas=fat*0.05;pisCofinsDas=fat*fed*(0.1928+
 else{issNoDas=Math.min(das*fx.r.iss,fat*0.05);pisCofinsDas=das*(fx.r.pis+fx.r.cofins);}
 // 6ª faixa (III e V): sem ISS no DAS — ISS recolhido por fora (alíquota municipal).
 const issFora=(fx.r.iss===0&&fat>0)?fat*P.iss:0;
-const baseIRPJ=P.equip?(row.cons*0.32+row.exam*0.08):(fat*0.32);
-const baseCSLL=P.equip?(row.cons*0.32+row.exam*0.12):(fat*0.32);
-const irpjBase=baseIRPJ*0.15, adic=Math.max(0,baseIRPJ-20000)*0.10, irpj=irpjBase+adic;
+const baseIRPJ=baseIRPJm[idx];
+const baseCSLL=baseCSLLm[idx];
+const majorada=majorM[idx];
+const irpjBase=baseIRPJ*0.15, adic=adicM[idx], irpj=irpjBase+adic;
 const csll=baseCSLL*0.09;
 const iss=fat*P.iss;
 const insumos=(row.pur+row.exp)*P.eleg;
@@ -402,7 +421,7 @@ const dasInterno=das-pisCofinsDas;
 const shTotal=dasInterno+cbsLiq+issFora;
 const spTotal=das+issFora;
 accRec+=fat;accFolha+=folhaMes;
-return{fat,folhaMes,rbt12,folha12m,fatorRmes,anexoMes,fx,aliqEf,das,issNoDas,isIII5,pisCofinsDas,issFora,baseIRPJ,irpj,adic,csll,iss,pisCof,cbsDeb,cbsCred,cbsLiq,inss,lpTotal,dasInterno,pisCofFora,shTotal,spTotal};
+return{fat,folhaMes,rbt12,folha12m,fatorRmes,anexoMes,fx,aliqEf,das,issNoDas,isIII5,pisCofinsDas,issFora,baseIRPJ,baseCSLL,majorada,irpj,adic,csll,iss,pisCof,cbsDeb,cbsCred,cbsLiq,inss,lpTotal,dasInterno,pisCofFora,shTotal,spTotal};
 });
 // Período de exibição: cálculo rolante usa os 12 meses (RBT12/folha12 contínuos),
 // mas painel, gráfico e totais mostram só o período escolhido.
@@ -415,7 +434,7 @@ const sum=k=>dRows.reduce((s,r)=>s+r[k],0);
 const tFat=dRows.reduce((s,r)=>s+r.fat,0),tLP=sum('lpTotal'),tSH=sum('shTotal'),tSP=sum('spTotal'),tINSS=sum('inss');
 const tFolhaMes=dRows.reduce((s,r)=>s+r.folhaMes,0);
 $('header-total-revenue').textContent=fmtC(tFat);
-$('header-info').textContent=`${perLbl} • RBT12 ${fmtC(P.rbt12)} • FPS12 inicial ${P.semFolha?'sem folha':fmtC(P.folha12)} • ${P.cenario==='cbs'?'2027 CBS '+fmtP(ivaEfet)+' (sem IBS; PIS/COFINS extintos)':'CBS+IBS '+fmtP(ivaEfet)} • ISS ${fmtP(P.iss)}`;
+$('header-info').textContent=`${perLbl} • RBT12 ${P.nova?'proporcional (nova)':fmtC(P.rbt12)} • FPS12 inicial ${P.semFolha?'sem folha':fmtC(P.folha12)} • ${P.cenario==='cbs'?'2027 oficial '+fmtP(ivaEfet)+' (CBS−0,1pp+IBS 0,1%)':'CBS+IBS '+fmtP(ivaEfet)} • ISS ${fmtP(P.iss)}`;
 const fR0=P.rbt12?P.folha12/P.rbt12:0;
 $('fatorR').textContent=(P.semFolha?'0,00% (sem folha)':fmtP(fR0));
 $('fatorR').title='FPS12 inicial '+fmtC(P.folha12)+' ÷ RBT12 inicial '+fmtC(P.rbt12);
@@ -428,12 +447,12 @@ const rbtMed=dRows.reduce((s,r)=>s+r.rbt12,0)/nVis;
 $('rbtMed').textContent=fmtC(rbtMed);
 $('aliqMed').textContent=fmtP(tFat?tSP/tFat:0)+' s/ DAS';
 $('lp-total-tax').textContent=fmtC(tLP);$('lp-eff-rate').textContent=fmtP(tFat?tLP/tFat:0);
-$('lp-detail').textContent=`IRPJ ${fmtC(sum('irpj'))} (adic. ${fmtC(sum('adic'))}) • CSLL ${fmtC(sum('csll'))} • ISS ${fmtC(sum('iss'))} • CBS/IBS líq. ${fmtC(sum('cbsLiq'))} (déb. ${fmtP(ivaEfet)} / créd. ${fmtP(aliqCred)}) • PIS/COFINS: extintos`;
+$('lp-detail').textContent=`IRPJ ${fmtC(sum('irpj'))} (adic. trim. ${fmtC(sum('adic'))}) • CSLL ${fmtC(sum('csll'))} • ISS ${fmtC(sum('iss'))} • CBS/IBS líq. ${fmtC(sum('cbsLiq'))} (déb. ${fmtP(ivaEfet)} / créd. ${fmtP(aliqCred)}) • PIS/COFINS: extintos${excTotAn>0?' • LC224 +10% presunção (rec. >5M)':''}`;
 $('th-cbs-deb').textContent=(P.cenario==='cbs'?'CBS':'CBS/IBS')+' débito ('+fmtP(ivaEfet)+')';
 $('th-cbs-cred').textContent='(-)Crédito ('+fmtP(aliqCred)+')';
 $('lp-inss-line').textContent=P.showInss?(P.semFolha?'Sem folha: INSS zero.':`+ INSS s/ folha (27,8%): ${fmtC(tINSS)} → LP c/ INSS ${fmtC(tLP+tINSS)} (${fmtP(tFat?(tLP+tINSS)/tFat:0)})`):'INSS oculto (ative nos parâmetros).';
 $('sh-total-tax').textContent=fmtC(tSH);$('sh-eff-rate').textContent=fmtP(tFat?tSH/tFat:0);
-$('sh-detail').textContent=`DAS interno ${fmtC(sum('dasInterno'))} + CBS líq. ${fmtC(sum('cbsLiq'))}`;
+$('sh-detail').textContent=`DAS interno ${fmtC(sum('dasInterno'))} (desconto PIS/COFINS = estimativa) + CBS líq. ${fmtC(sum('cbsLiq'))}`;
 $('sp-total-tax').textContent=fmtC(tSP);$('sp-eff-rate').textContent=fmtP(tFat?tSP/tFat:0);
 $('sp-detail').textContent=`DAS ${fmtC(sum('das'))} (partilha LC 123/2006 — PIS/COFINS dentro do DAS)`;
 $('sh-anexo-tag').textContent=anexoPred;$('sp-anexo-tag').textContent=anexoPred;
@@ -444,7 +463,10 @@ $('badge-lp').style.display=win.id==='card-lp'?'block':'none';
 let alertas=[];
 if(!P.nova){const somaHistRec=P.histRec.reduce((s,v)=>s+v,0);if(Math.abs(somaHistRec-P.rbt12)>Math.max(1,P.rbt12*0.005)&&P.rbt12>0)alertas.push('Soma hist. receita '+fmtC(somaHistRec)+' ≠ RBT12 '+fmtC(P.rbt12));if(!P.semFolha){const somaHistFol=P.histFolha.reduce((s,v)=>s+v,0);if(Math.abs(somaHistFol-P.folha12)>Math.max(1,P.folha12*0.005)&&P.folha12>0)alertas.push('Soma hist. folha '+fmtC(somaHistFol)+' ≠ FPS12 '+fmtC(P.folha12));}}
 if(P.nova)alertas.push('Empresa nova: RBT12/FPS12 proporcionalizados');
-if(dRows.some(r=>r.adic>0))alertas.push('Adicional IRPJ ativo');
+if(dRows.some(r=>r.adic>0))alertas.push('Adicional IRPJ trimestral ativo (rateado no mês)');
+if(excTotAn>0)alertas.push('LC 224/2025: +10% presunção no excedente a R$5M ('+fmtC(excTotAn)+')');
+if(P.equip)alertas.push('Equiparação: exige soc. empresária + ANVISA; consulta simples não qualifica');
+if(dRows.some(r=>r.rbt12>4800000))alertas.push('RBT12 >R$4,8M: risco desenquadramento Simples');
 if(dRows.some(r=>r.isIII5))alertas.push('Anexo III 5ª fx: ISS fixo 5% + federais redistribuídos (nota LC 123)');
 if(dRows.some(r=>r.issFora>0))alertas.push('6ª faixa: ISS fora do DAS (recolhido à parte)');
 if(P.anexo==='auto'&&(nIII>0&&nIII<nVis))alertas.push('Anexo varia no período (Fator R mensal)');
